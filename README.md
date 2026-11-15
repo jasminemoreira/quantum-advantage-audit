@@ -20,6 +20,8 @@ scripts in `scripts/`. Each result file states the random seed in its header.
 | `qga/check_aer.py` | cross-check of exact vs. Aer marginals (prints to the terminal) | Sec. 4 |
 | `qga/certify_product_state.py` | `certify_product_state-*.txt` (verifier, cases, negative controls) | Sec. 5 |
 | `qga/certify_qaco.py` | `certify_qaco-*.txt` | Sec. 5 |
+| `qga/simulation_cost.py` | `simulation_cost-*.txt` (state vector vs. per-shot classical sampler, 4 to 400 qubits) | Sec. 5, Fig. 2 |
+| `figures/make_figures.py [--lang pt\|en]` | `results/figures/fig1_rqga2006.pdf`, `fig2_simulation_cost.pdf`, `fig3_corpus.pdf` (drawn from the result files; needs matplotlib only) | Figs. 1 to 3 |
 | `qga/cases_acampora.py` | `cases_acampora-*.txt` (HQGA, QMO, Rosales et al.) | Sec. 5, application cases |
 | `qga/cases_ant_colony_grover.py` | `cases_ant_colony_grover-*.txt` (Wu et al., Ghosh et al., Martinez et al., Gomez Cadavid et al.) | Secs. 4, 5, 7 |
 | `qga/cases_other_gas.py` | `cases_other_gas-*.txt` (Wang and Wang, Sarracino et al., Abdolahi et al., Soloviev et al.) | Secs. 5, 7 |

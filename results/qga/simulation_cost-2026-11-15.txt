@@ -1,0 +1,26 @@
+Simulation cost of a Pattern 2 circuit (EAQGA chain reading) | seed 20261117 | 2026-11-15
+sampler: 1000 samples, one at a time; verifier and sampler: median of 3 timings; state vector: qiskit.quantum_info.Statevector, one timing
+
+check: n | TV(empirical 200000 shots, state vector) | expected TV scale sqrt(2^n/shots)
+  4 | 0.0017 | 0.0089
+  6 | 0.0024 | 0.0179
+  8 | 0.0030 | 0.0358
+
+n | verifier (s) | sampler, 1000 samples (s) | state vector (s)
+4 | 0.0001915 | 0.01018 | 0.0005589
+8 | 0.0003201 | 0.02928 | 0.0009111
+12 | 0.0002725 | 0.03439 | 0.001311
+16 | 0.0003558 | 0.05669 | 0.008256
+18 | 0.0004288 | 0.05884 | 0.1006
+20 | 0.0003433 | 0.06333 | 0.3066
+22 | 0.0003668 | 0.07338 | 1.673
+24 | 0.0004077 | 0.07945 | 6.711
+26 | 0.0003851 | 0.0784 | 27.55
+28 | 0.0004405 | 0.08776 | 117.8
+40 | 0.000522 | 0.1249 | -
+60 | 0.0006528 | 0.1993 | -
+100 | 0.0009042 | 0.3178 | -
+200 | 0.001627 | 0.6163 | -
+400 | 0.003427 | 1.306 | -
+
+state vector memory (complex128): 2^n x 16 bytes; n = 28 -> 4 GiB; n = 100 -> about 2e31 bytes
