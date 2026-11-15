@@ -20,6 +20,9 @@ scripts in `scripts/`. Each result file states the random seed in its header.
 | `qga/check_aer.py` | cross-check of exact vs. Aer marginals (prints to the terminal) | Sec. 4 |
 | `qga/certify_product_state.py` | `certify_product_state-*.txt` (verifier, cases, negative controls) | Sec. 5 |
 | `qga/certify_qaco.py` | `certify_qaco-*.txt` | Sec. 5 |
+| `qga/cases_acampora.py` | `cases_acampora-*.txt` (HQGA, QMO, Rosales et al.) | Sec. 5, application cases |
+| `qga/cases_ant_colony_grover.py` | `cases_ant_colony_grover-*.txt` (Wu et al., Ghosh et al., Martinez et al., Gomez Cadavid et al.) | Secs. 4, 5, 7 |
+| `qga/cases_other_gas.py` | `cases_other_gas-*.txt` (Wang and Wang, Sarracino et al., Abdolahi et al., Soloviev et al.) | Secs. 5, 7 |
 
 Scripts write a new file named with the current date; the files committed here are the ones cited in
 the article.
@@ -80,6 +83,9 @@ file are identical to those in the corresponding original file, except for run d
 | `confere_aer.py` | `check_aer.py` |
 | `certifica_padrao1.py` | `certify_product_state.py` |
 | `certifica_qaco.py` | `certify_qaco.py` |
+| `acampora_casos.py` | `cases_acampora.py` |
+| `formigas_grover.py` | `cases_ant_colony_grover.py` |
+| `geneticos_outros.py` | `cases_other_gas.py` |
 
 ## License
 

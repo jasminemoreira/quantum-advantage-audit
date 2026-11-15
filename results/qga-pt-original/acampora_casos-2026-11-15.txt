@@ -1,0 +1,32 @@
+grupo acampora | semente 20261115
+HQGA inicializacao (Figs. 7a/8a/9a) | n=(1, 3, 5) | amostragem classica = [True] | TV max 5.5e-16 em 60 circuitos
+   exact prefix 1 gates, product
+HQGA iteracao, elitismo por angulo (Figs. 7b-d) | n=(1, 3, 5) | amostragem classica = [True] | TV max 7.6e-16 em 60 circuitos
+   exact prefix 1 gates, product
+HQGA iteracao, elitismo deterministico (Eq. 14) | n=(1, 3, 5) | amostragem classica = [True] | TV max 6.1e-16 em 60 circuitos
+   exact prefix 1 gates, product; exact prefix 2 gates, product; exact prefix 3 gates, product; exact prefix 4 gates, product; exact prefix 5 gates, product; exact prefix 6 gates, product
+HQGA k=4 e k=5 | n=(2, 3) | amostragem classica = [True] | TV max 4.8e-16 em 40 circuitos
+   exact prefix 1 gates, product
+HQGA n=8 por cromossomo (24 qubits, so classifica) | n=(8,) | amostragem classica = [True] | sem TV
+   exact prefix 1 gates, product
+HQGA hipotetica: Ry no controle apos CNOT | n=(1, 3, 5) | amostragem classica = [True] | TV max 8.4e-16 em 60 circuitos
+   exact prefix 1 gates, product
+HQGA hipotetica: Ry no alvo apos CNOT | n=(1, 3, 5) | amostragem classica = [True] | TV max 5.4e-16 em 60 circuitos
+   exact prefix 1 gates, product
+HQGA 300 qubits (k=3, n=100): True (exact prefix 1 gates, product; 848 gates after; 200 coupled qubits; rule R2 used 0 times) | 0.01s
+QMO (Ry crossover + Ry mutacao) | n=(3, 5, 8) | amostragem classica = [True] | TV max 2.7e-16 em 60 circuitos
+   exact prefix 0 gates, product
+Rosales 2024 (H + Ry(Delta theta), Tabela 1) | n=(3, 5, 8) | amostragem classica = [True] | TV max 3.6e-16 em 60 circuitos
+   exact prefix 1 gates, product
+Rosales 2024 (H + Ry acumulado) | n=(3, 5, 8) | amostragem classica = [True] | TV max 5.7e-16 em 60 circuitos
+   exact prefix 1 gates, product
+   Rosales: Delta theta = -0.050 -> P(1) = 0.4501
+   Rosales: Delta theta = -0.010 -> P(1) = 0.4900
+   Rosales: Delta theta = +0.000 -> P(1) = 0.5000
+   Rosales: Delta theta = +0.005 -> P(1) = 0.5050
+   Rosales: Delta theta = +0.025 -> P(1) = 0.5250
+
+Contagem de R2 (n=3, k=3):
+livre exact prefix 1 gates, product; 24 gates after; 6 coupled qubits; rule R2 used 0 times
+controle exact prefix 1 gates, product; 24 gates after; 5 coupled qubits; rule R2 used 1 times
+alvo exact prefix 1 gates, product; 26 gates after; 5 coupled qubits; rule R2 used 1 times

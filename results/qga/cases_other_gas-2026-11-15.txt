@@ -1,0 +1,38 @@
+Other genetic algorithms group | seed 20261115 | 2026-11-15 | classifica() from certify_product_state.py
+
+== 26 Wang & Wang 2025 (H + rotation on each qubit; text: no entangling gates)
+26 reading Ry, 1 layer: ok=[True] | TV max 4.8e-16 over 60 circuits
+   exact prefix 1 gates, product
+26 reading Rx, 1 layer: ok=[True] | TV max 7.8e-16 over 60 circuits
+   exact prefix 1 gates, product
+26 reading general U, 3 layers (accumulated rotations): ok=[True] | TV max 9.4e-16 over 60 circuits
+   exact prefix 1 gates, product
+26 with 200 qubits: ok=True (exact prefix 1 gates, product; 799 gates after; 0 coupled qubits; rule R2 used 0 times) | 0.01s
+
+== 29 Soloviev et al. 2021 (modified W state)
+29 reading figure: ok=[False] | no sampler
+   gate non-monomial ry on a coupled qubit without a copy (gate 3)
+29 reading text: ok=[False] | no sampler
+   gate non-monomial ry on a coupled qubit without a copy (gate 3)
+29 Fig. 2 (n=5, gamma=1/5): angles = 2.214, 2.094, 1.911, 1.571 (figure: 2.21, 2pi/3=2.094, 1.91, pi/2=1.571)
+29 reading figure: TV(measured distribution, categorical gamma) max 3.1e-16; prob. outside the one-hot states max 3.3e-16 (60 circuits)
+29 reading text (sum up to i): TV(measured, gamma) min 0.01 max 0.39 -- reproduces neither the categorical distribution nor the angles of Fig. 2
+
+== 17 Sarracino et al. 2026 (amplitude encoding + Rx(pi/2) + CRy(pi/2) in both directions)
+17 preparation stateprep: ok=[False] | no sampler
+   gate non-monomial unitary on a coupled qubit without a copy (gate 3)
+17 preparation initialize: ok=[False] | no sampler
+   gate non-monomial unitary on a coupled qubit without a copy (gate 5); gate non-monomial unitary on a coupled qubit without a copy (gate 6); gate non-monomial unitary on a coupled qubit without a copy (gate 8)
+17: TV(statevector, computation on a dense vector of size N=2^n) max 5.0e-11 (40 circuits)
+
+== 19 Abdolahi et al. 2025 (H on the ancillas, controlled initialization, SWAP test)
+19 m=1, k=1 (4 qubits): ok=[False] | gate non-monomial ry on a coupled qubit without a copy (gate 4)
+   |P(i,c=1) - (1-prod_j|<a_ij|b_j>|^2)/(2P)| max 1.1e-16; |P(i) - 1/P| max 4.4e-16
+19 m=1, k=2 (6 qubits): ok=[False] | gate non-monomial ry on a coupled qubit without a copy (gate 4)
+   |P(i,c=1) - (1-prod_j|<a_ij|b_j>|^2)/(2P)| max 2.2e-16; |P(i) - 1/P| max 6.1e-16
+19 m=2, k=2 (7 qubits): ok=[False] | exact-prefix state (8 gates) is not a product state
+   |P(i,c=1) - (1-prod_j|<a_ij|b_j>|^2)/(2P)| max 3.9e-16; |P(i) - 1/P| max 8.6e-16
+19 m=2, k=3 (9 qubits): ok=[False] | exact-prefix state (8 gates) is not a product state
+   |P(i,c=1) - (1-prod_j|<a_ij|b_j>|^2)/(2P)| max 5.6e-16; |P(i) - 1/P| max 1.1e-15
+19 m=3, k=2 (8 qubits): ok=[False] | exact-prefix state (10 gates) is not a product state
+   |P(i,c=1) - (1-prod_j|<a_ij|b_j>|^2)/(2P)| max 2.1e-15; |P(i) - 1/P| max 4.4e-15

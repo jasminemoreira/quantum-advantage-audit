@@ -1,0 +1,101 @@
+Ant colony / Grover group | seed 20261115 | 2026-11-15
+
+== 05 (Wu et al. 2025, Fig. 1) and 07b (Qiu et al. arXiv 2403.00367, Fig. 2) ==
+05 Fig. 1 (3 CSWAP): classical sampling = [True] (expected True) | TV max 1.9e-16 over 60 circuits
+   exact prefix 0 gates, product
+07b Fig. 2 (CSWAP on all pairs, measurement after last use): classical sampling = [True] (expected True) | TV max 2.5e-16 over 60 circuits
+   exact prefix 0 gates, product
+07b variant with randomly drawn pairs: classical sampling = [True] (expected True) | TV max 1.9e-16 over 60 circuits
+   exact prefix 0 gates, product
+07b with 9 qubits (size in the paper): True (exact prefix 0 gates, product; 45 gates after; 9 coupled qubits; rule R2 used 0 times)
+
+== 07a (Ghosh et al. 2021, MNDAS) ==
+pheromone box, reading fig10, K=16: 0:0000 1:0000 2:1000 3:0000 4:0000 5:1001 6:0000 7:0000
+pheromone box, reading fig10, K=20: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1111 6:0000 7:0000
+pheromone box, reading fig10, K=21: 0:1000 1:0000 2:0000 3:0000 4:0000 5:1111 6:0000 7:0000
+pheromone box, reading fig10, K=200: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1111 6:0000 7:0000
+pheromone box, reading alg, K=16: 0:0000 1:0000 2:1000 3:0000 4:0000 5:1000 6:0000 7:0000
+pheromone box, reading alg, K=20: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1000 6:0000 7:0000
+pheromone box, reading alg, K=21: 0:1000 1:0000 2:0000 3:0000 4:0000 5:0000 6:0000 7:0000
+pheromone box, reading alg, K=200: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1000 6:0000 7:0000
+(Fig. 10 of the paper, K=21: path 0 = 1000, path 5 = 1111, all others 0000)
+
+ reading fig10, K=21: classes of paths with the same pheromone: [[0], [1, 2, 3, 4, 6, 7], [5]]
+   QAA fig4      cz  k=1: P(path 5) = 0.3594; largest other = 0.3594
+      full marginal: 0:0.3594 1:0.0469 2:0.0469 3:0.0469 4:0.0469 5:0.3594 6:0.0469 7:0.0469
+   QAA fig4      crz k=1: P(path 5) = 0.3594; largest other = 0.3594
+   QAA fig4      cz  k=2: P(path 5) = 0.0312; largest other = 0.1562
+   QAA fig4      cz  k=3: P(path 5) = 0.3594; largest other = 0.3594
+   QAA text      cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=1: P(path 5) = 0.3594; largest other = 0.3594
+   QAA phase_P   cz  k=2: P(path 5) = 0.6523; largest other = 0.1836
+   QAA phase_P   cz  k=3: P(path 5) = 0.4912; largest other = 0.1396
+   QAA repair    cz  k=1: P(path 5) = 0.7812; largest other = 0.0312
+   QAA repair    cz  k=2: P(path 5) = 0.9453; largest other = 0.0078
+   QAA repair    cz  k=3: P(path 5) = 0.3301; largest other = 0.0957
+
+ reading fig10, K=200: classes of paths with the same pheromone: [[0, 1, 2, 3, 6, 7], [4], [5]]
+   QAA fig4      cz  k=1: P(path 5) = 0.3594; largest other = 0.3594
+      full marginal: 0:0.0469 1:0.0469 2:0.0469 3:0.0469 4:0.3594 5:0.3594 6:0.0469 7:0.0469
+   QAA fig4      crz k=1: P(path 5) = 0.3594; largest other = 0.3594
+   QAA fig4      cz  k=2: P(path 5) = 0.0312; largest other = 0.1562
+   QAA fig4      cz  k=3: P(path 5) = 0.3594; largest other = 0.3594
+   QAA text      cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=1: P(path 5) = 0.3594; largest other = 0.3594
+   QAA phase_P   cz  k=2: P(path 5) = 0.6523; largest other = 0.1836
+   QAA phase_P   cz  k=3: P(path 5) = 0.4912; largest other = 0.1396
+   QAA repair    cz  k=1: P(path 5) = 0.7812; largest other = 0.0312
+   QAA repair    cz  k=2: P(path 5) = 0.9453; largest other = 0.0078
+   QAA repair    cz  k=3: P(path 5) = 0.3301; largest other = 0.0957
+
+ reading alg, K=21: classes of paths with the same pheromone: [[0], [1, 2, 3, 4, 5, 6, 7]]
+   QAA fig4      cz  k=1: P(path 5) = 0.0781; largest other = 0.4531
+      full marginal: 0:0.4531 1:0.0781 2:0.0781 3:0.0781 4:0.0781 5:0.0781 6:0.0781 7:0.0781
+   QAA fig4      crz k=1: P(path 5) = 0.0781; largest other = 0.4531
+   QAA fig4      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA fig4      cz  k=3: P(path 5) = 0.0781; largest other = 0.4531
+   QAA text      cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=1: P(path 5) = 0.0781; largest other = 0.4531
+   QAA phase_P   cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=3: P(path 5) = 0.0781; largest other = 0.4531
+   QAA repair    cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA repair    cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA repair    cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+
+ reading alg, K=200: classes of paths with the same pheromone: [[0, 1, 2, 3, 6, 7], [4, 5]]
+   QAA fig4      cz  k=1: P(path 5) = 0.3125; largest other = 0.3125
+      full marginal: 0:0.0625 1:0.0625 2:0.0625 3:0.0625 4:0.3125 5:0.3125 6:0.0625 7:0.0625
+   QAA fig4      crz k=1: P(path 5) = 0.3125; largest other = 0.3125
+   QAA fig4      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA fig4      cz  k=3: P(path 5) = 0.3125; largest other = 0.3125
+   QAA text      cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA text      cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=1: P(path 5) = 0.3125; largest other = 0.3125
+   QAA phase_P   cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA phase_P   cz  k=3: P(path 5) = 0.3125; largest other = 0.3125
+   QAA repair    cz  k=1: P(path 5) = 0.1250; largest other = 0.1250
+   QAA repair    cz  k=2: P(path 5) = 0.1250; largest other = 0.1250
+   QAA repair    cz  k=3: P(path 5) = 0.1250; largest other = 0.1250
+ control: diffuser alone on P, without the phase (K=200, fig10): P(5) = 0.3594
+ value reported in the paper (Fig. 12, ibmq_16_melbourne, K=200): P(5) = 0.501
+ bound of the Lemma (if P were a mixture of basis states): P0 + (1-P0)/(8-1) with P0=1/8 -> 0.2500
+ purity of the reduced state of P before the QAA (K=200, fig10): 0.5937
+ classifica on the literal circuit (K=4, fresh ancillas in place of the RESET): False (exact-prefix state (108 gates) is not a product state)
+
+== 25 (Martinez et al. 2025, Fig. 1) ==
+25 Fig. 1 (Grover, 1 marked, 1 iteration): classical sampling = [False] (expected False) | no sampler
+   exact-prefix state (21 gates) is not a product state; exact-prefix state (31 gates) is not a product state; exact-prefix state (46 gates) is not a product state
+ n=3: P(1..1) = 0.7812; sin^2(3 asin(2^(-n/2))) = 0.7813; purity of the data = 1.000000; ancilla in |->: True
+ n=5: P(1..1) = 0.2583; sin^2(3 asin(2^(-n/2))) = 0.2583; purity of the data = 1.000000; ancilla in |->: True
+ n=8: P(1..1) = 0.0348; sin^2(3 asin(2^(-n/2))) = 0.0348; purity of the data = 1.000000; ancilla in |->: True
+
+== 42 (Cadavid et al. 2026, DCQO, one step, two-body terms only) ==
+42 DCQO (R_YZ R_ZY after |+>): classical sampling = [False] (expected False) | no sampler
+   gate non-monomial rx on a coupled qubit without a copy (gate 5); gate non-monomial rx on a coupled qubit without a copy (gate 7)

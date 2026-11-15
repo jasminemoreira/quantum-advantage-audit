@@ -1,0 +1,101 @@
+Grupo formigas_grover | semente 20261115
+
+== 05 (Wu et al. 2025, Fig. 1) e 07b (Qiu et al. arXiv 2403.00367, Fig. 2) ==
+05 Fig. 1 (3 CSWAP): amostragem classica = [True] (esperado True) | TV max 1.9e-16 em 60 circuitos
+   exact prefix 0 gates, product
+07b Fig. 2 (CSWAP em todos os pares, medicao apos ultimo uso): amostragem classica = [True] (esperado True) | TV max 2.5e-16 em 60 circuitos
+   exact prefix 0 gates, product
+07b variante com pares sorteados: amostragem classica = [True] (esperado True) | TV max 1.9e-16 em 60 circuitos
+   exact prefix 0 gates, product
+07b com 9 qubits (tamanho do artigo): True (exact prefix 0 gates, product; 45 gates after; 9 coupled qubits; rule R2 used 0 times)
+
+== 07a (Ghosh et al. 2021, MNDAS) ==
+caixa de feromonio, leitura fig10, K=16: 0:0000 1:0000 2:1000 3:0000 4:0000 5:1001 6:0000 7:0000
+caixa de feromonio, leitura fig10, K=20: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1111 6:0000 7:0000
+caixa de feromonio, leitura fig10, K=21: 0:1000 1:0000 2:0000 3:0000 4:0000 5:1111 6:0000 7:0000
+caixa de feromonio, leitura fig10, K=200: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1111 6:0000 7:0000
+caixa de feromonio, leitura alg, K=16: 0:0000 1:0000 2:1000 3:0000 4:0000 5:1000 6:0000 7:0000
+caixa de feromonio, leitura alg, K=20: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1000 6:0000 7:0000
+caixa de feromonio, leitura alg, K=21: 0:1000 1:0000 2:0000 3:0000 4:0000 5:0000 6:0000 7:0000
+caixa de feromonio, leitura alg, K=200: 0:0000 1:0000 2:0000 3:0000 4:1000 5:1000 6:0000 7:0000
+(Fig. 10 do artigo, K=21: caminho 0 = 1000, caminho 5 = 1111, demais 0000)
+
+ leitura fig10, K=21: classes de caminhos com o mesmo feromonio: [[0], [1, 2, 3, 4, 6, 7], [5]]
+   QAA fig4      cz  k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+      marginal completa: 0:0.3594 1:0.0469 2:0.0469 3:0.0469 4:0.0469 5:0.3594 6:0.0469 7:0.0469
+   QAA fig4      crz k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA fig4      cz  k=2: P(caminho 5) = 0.0312; maior outro = 0.1562
+   QAA fig4      cz  k=3: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA texto     cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA fase_em_P cz  k=2: P(caminho 5) = 0.6523; maior outro = 0.1836
+   QAA fase_em_P cz  k=3: P(caminho 5) = 0.4912; maior outro = 0.1396
+   QAA reparo    cz  k=1: P(caminho 5) = 0.7812; maior outro = 0.0312
+   QAA reparo    cz  k=2: P(caminho 5) = 0.9453; maior outro = 0.0078
+   QAA reparo    cz  k=3: P(caminho 5) = 0.3301; maior outro = 0.0957
+
+ leitura fig10, K=200: classes de caminhos com o mesmo feromonio: [[0, 1, 2, 3, 6, 7], [4], [5]]
+   QAA fig4      cz  k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+      marginal completa: 0:0.0469 1:0.0469 2:0.0469 3:0.0469 4:0.3594 5:0.3594 6:0.0469 7:0.0469
+   QAA fig4      crz k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA fig4      cz  k=2: P(caminho 5) = 0.0312; maior outro = 0.1562
+   QAA fig4      cz  k=3: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA texto     cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=1: P(caminho 5) = 0.3594; maior outro = 0.3594
+   QAA fase_em_P cz  k=2: P(caminho 5) = 0.6523; maior outro = 0.1836
+   QAA fase_em_P cz  k=3: P(caminho 5) = 0.4912; maior outro = 0.1396
+   QAA reparo    cz  k=1: P(caminho 5) = 0.7812; maior outro = 0.0312
+   QAA reparo    cz  k=2: P(caminho 5) = 0.9453; maior outro = 0.0078
+   QAA reparo    cz  k=3: P(caminho 5) = 0.3301; maior outro = 0.0957
+
+ leitura alg, K=21: classes de caminhos com o mesmo feromonio: [[0], [1, 2, 3, 4, 5, 6, 7]]
+   QAA fig4      cz  k=1: P(caminho 5) = 0.0781; maior outro = 0.4531
+      marginal completa: 0:0.4531 1:0.0781 2:0.0781 3:0.0781 4:0.0781 5:0.0781 6:0.0781 7:0.0781
+   QAA fig4      crz k=1: P(caminho 5) = 0.0781; maior outro = 0.4531
+   QAA fig4      cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fig4      cz  k=3: P(caminho 5) = 0.0781; maior outro = 0.4531
+   QAA texto     cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=1: P(caminho 5) = 0.0781; maior outro = 0.4531
+   QAA fase_em_P cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=3: P(caminho 5) = 0.0781; maior outro = 0.4531
+   QAA reparo    cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA reparo    cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA reparo    cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+
+ leitura alg, K=200: classes de caminhos com o mesmo feromonio: [[0, 1, 2, 3, 6, 7], [4, 5]]
+   QAA fig4      cz  k=1: P(caminho 5) = 0.3125; maior outro = 0.3125
+      marginal completa: 0:0.0625 1:0.0625 2:0.0625 3:0.0625 4:0.3125 5:0.3125 6:0.0625 7:0.0625
+   QAA fig4      crz k=1: P(caminho 5) = 0.3125; maior outro = 0.3125
+   QAA fig4      cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fig4      cz  k=3: P(caminho 5) = 0.3125; maior outro = 0.3125
+   QAA texto     cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA texto     cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=1: P(caminho 5) = 0.3125; maior outro = 0.3125
+   QAA fase_em_P cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA fase_em_P cz  k=3: P(caminho 5) = 0.3125; maior outro = 0.3125
+   QAA reparo    cz  k=1: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA reparo    cz  k=2: P(caminho 5) = 0.1250; maior outro = 0.1250
+   QAA reparo    cz  k=3: P(caminho 5) = 0.1250; maior outro = 0.1250
+ controle: so o difusor em P, sem a fase (K=200, fig10): P(5) = 0.3594
+ valor reportado no artigo (Fig. 12, ibmq_16_melbourne, K=200): P(5) = 0.501
+ cota do Lema (se P fosse mistura de estados de base): P0 + (1-P0)/(8-1) com P0=1/8 -> 0.2500
+ pureza do estado reduzido de P antes do QAA (K=200, fig10): 0.5937
+ classifica no circuito literal (K=4, ancilas novas no lugar do RESET): False (exact-prefix state (108 gates) is not a product state)
+
+== 25 (Martinez et al. 2025, Fig. 1) ==
+25 Fig. 1 (Grover, 1 marcado, 1 iteracao): amostragem classica = [False] (esperado False) | sem amostrador
+   exact-prefix state (21 gates) is not a product state; exact-prefix state (31 gates) is not a product state; exact-prefix state (46 gates) is not a product state
+ n=3: P(1..1) = 0.7812; sin^2(3 asin(2^(-n/2))) = 0.7813; pureza dos dados = 1.000000; ancila em |->: True
+ n=5: P(1..1) = 0.2583; sin^2(3 asin(2^(-n/2))) = 0.2583; pureza dos dados = 1.000000; ancila em |->: True
+ n=8: P(1..1) = 0.0348; sin^2(3 asin(2^(-n/2))) = 0.0348; pureza dos dados = 1.000000; ancila em |->: True
+
+== 42 (Cadavid et al. 2026, DCQO, um passo, so termos de dois corpos) ==
+42 DCQO (R_YZ R_ZY apos |+>): amostragem classica = [False] (esperado False) | sem amostrador
+   gate non-monomial rx on a coupled qubit without a copy (gate 5); gate non-monomial rx on a coupled qubit without a copy (gate 7)

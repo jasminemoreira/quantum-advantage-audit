@@ -1,0 +1,27 @@
+Acampora group | seed 20261115 | 2026-11-15
+HQGA initialization (Figs. 7a/8a/9a) | n=(1, 3, 5) | classical sampling = [True] | TV max 5.5e-16 over 60 circuits
+   exact prefix 1 gates, product
+HQGA iteration, elitism by angle (Figs. 7b-d) | n=(1, 3, 5) | classical sampling = [True] | TV max 7.6e-16 over 60 circuits
+   exact prefix 1 gates, product
+HQGA iteration, deterministic elitism (Eq. 14) | n=(1, 3, 5) | classical sampling = [True] | TV max 6.1e-16 over 60 circuits
+   exact prefix 1 gates, product; exact prefix 2 gates, product; exact prefix 3 gates, product; exact prefix 4 gates, product; exact prefix 5 gates, product; exact prefix 6 gates, product
+HQGA k=4 and k=5 | n=(2, 3) | classical sampling = [True] | TV max 4.8e-16 over 40 circuits
+   exact prefix 1 gates, product
+HQGA n=8 per chromosome (24 qubits, classification only) | n=(8,) | classical sampling = [True] | no TV
+   exact prefix 1 gates, product
+HQGA hypothetical: Ry on the control after CNOT | n=(1, 3, 5) | classical sampling = [True] | TV max 8.4e-16 over 60 circuits
+   exact prefix 1 gates, product
+HQGA hypothetical: Ry on the target after CNOT | n=(1, 3, 5) | classical sampling = [True] | TV max 5.4e-16 over 60 circuits
+   exact prefix 1 gates, product
+HQGA 300 qubits (k=3, n=100): True (exact prefix 1 gates, product; 848 gates after; 200 coupled qubits; rule R2 used 0 times) | 0.01s
+QMO (Ry crossover + Ry mutation) | n=(3, 5, 8) | classical sampling = [True] | TV max 2.7e-16 over 60 circuits
+   exact prefix 0 gates, product
+Rosales 2024 (H + Ry(Delta theta), Table 1) | n=(3, 5, 8) | classical sampling = [True] | TV max 3.6e-16 over 60 circuits
+   exact prefix 1 gates, product
+Rosales 2024 (H + accumulated Ry) | n=(3, 5, 8) | classical sampling = [True] | TV max 5.7e-16 over 60 circuits
+   exact prefix 1 gates, product
+   Rosales: Delta theta = -0.050 -> P(1) = 0.4501
+   Rosales: Delta theta = -0.010 -> P(1) = 0.4900
+   Rosales: Delta theta = +0.000 -> P(1) = 0.5000
+   Rosales: Delta theta = +0.005 -> P(1) = 0.5050
+   Rosales: Delta theta = +0.025 -> P(1) = 0.5250
