@@ -108,9 +108,10 @@ def classifica(qc):
         return False, f"exact-prefix state ({prefixo} gates) is not a product state", None
     # (2) rest. States per qubit: basic (only monomial gates so far: definite basis value),
     # coupled (has already taken part in a gate on two or more qubits), locked (witness used).
-    # Rule R2 (deferred measurement): a non-monomial gate on a coupled qubit q is accepted only if there
-    # is a copy of the value of q in another qubit w (made by a CNOT with w still basic) and w never
-    # receives a gate again. Then the branches q = 0 and q = 1 are orthogonal in w and do not interfere:
+    # Rule R2 (deferred measurement): a non-monomial gate on a coupled qubit q is accepted only if q has a
+    # witness: another qubit w in the same copy class (Suppl. S1). A copy is a CNOT whose target is still
+    # basic; it puts the target in the control's class, so either qubit of a copy, or any qubit linked to
+    # q by a chain of copies, is a witness. The used witnesses never receive a gate again. Then the branches q = 0 and q = 1 are orthogonal in w and do not interfere:
     # this is equivalent to measuring q and preparing it again.
     basico = {q: len(m.marginal([q])) == 1 for q in range(n)}
     classe = {q: {q} for q in range(n)}
