@@ -1,9 +1,0 @@
-Certificacao exata do emaranhamento intra-individuo, operadores da v1 | semente 20261116 | 2026-11-13
-primos [1073741441, 536883073]
-final (-5.12, 5.12) | n=20 | separaveis entre registros: 3 | posto de Schmidt (cota certificada) mediana 4, max 32 | cota mod p == SVD em 20/20 | qubits emaranhados com o resto: mediana 9, max 12 | p(x) fatora entre registros: 4/20 | marginais em {0,1/2,1}: 10/20
-  Spearman(f, posto) = -0.49 | melhor f 0.1347, separavel? False
-final (-2.12, 8.12) | n=20 | separaveis entre registros: 14 | posto de Schmidt (cota certificada) mediana 1, max 2 | cota mod p == SVD em 20/20 | qubits emaranhados com o resto: mediana 0, max 5 | p(x) fatora entre registros: 14/20 | marginais em {0,1/2,1}: 20/20
-  Spearman(f, posto) = +0.00 | melhor f 0.0227, separavel? True
-inicial | n=100 | separaveis entre registros: 12 | posto de Schmidt (cota certificada) mediana 4, max 48 | cota mod p == SVD em 100/100 | qubits emaranhados com o resto: mediana 8, max 15 | p(x) fatora entre registros: 19/100 | marginais em {0,1/2,1}: 35/100
-
-melhores finais: dominio | f | k | suporte | separavel | posto >= | posto SVD | qubits emaranhados | p fatora | marginais em {0,1/2,1}

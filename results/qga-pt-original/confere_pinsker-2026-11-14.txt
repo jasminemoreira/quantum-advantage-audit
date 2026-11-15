@@ -1,3 +1,0 @@
-Conferencia numerica da cota de Pinsker (vies de centro) | semente 20261120 | 2026-11-14
-N=16, n=8, m=2; 400 individuos; violacoes (d > cota marginal ou marginal > global): 0
-maior razao d/cota global 0.426; d/cota marginal 0.489

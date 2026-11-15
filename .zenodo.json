@@ -1,11 +1,21 @@
 {
   "title": "Where does the quantum advantage go? Reproduction package",
   "upload_type": "software",
-  "description": "Code and result files for the article <i>Where does the quantum advantage go? An audit of evolutionary algorithms executed on quantum circuits</i> (manuscript in preparation for Quantum Machine Intelligence). Includes an exact sparse simulator over Z[&zeta;<sub>16</sub>], the structural verifier for product-state circuits, the exact certificates for the reduced quantum genetic algorithm and the pre-registered ablation control. Code under the MIT License; result files under CC BY 4.0.",
+  "description": "Code and result files for the article <i>Where does the quantum advantage go? An audit of evolutionary algorithms executed on quantum circuits</i> (manuscript in preparation for Quantum Machine Intelligence). Includes an exact sparse simulator over Z[&zeta;<sub>16</sub>], the exact certificates for the reduced quantum genetic algorithm and the structural verifier for product-state circuits. Code under the MIT License; result files under CC BY 4.0.",
   "creators": [
-    {"name": "Moreira, Jasmine", "affiliation": "Universidade Tecnológica Federal do Paraná"}
+    {
+      "name": "Moreira, Jasmine",
+      "affiliation": "Universidade Tecnológica Federal do Paraná"
+    }
   ],
   "license": "MIT",
-  "keywords": ["quantum evolutionary algorithms", "quantum genetic algorithms", "classical simulation", "Grover search", "circuit verification", "quantum advantage"],
+  "keywords": [
+    "quantum evolutionary algorithms",
+    "quantum genetic algorithms",
+    "classical simulation",
+    "Grover search",
+    "circuit verification",
+    "quantum advantage"
+  ],
   "language": "eng"
 }

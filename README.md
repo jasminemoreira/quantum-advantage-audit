@@ -17,19 +17,9 @@ scripts in `scripts/`. Each result file states the random seed in its header.
 | `qga/rqga2006_example_float.py` | `rqga2006_example_float-*.txt` (same, floating point) | Sec. 4 |
 | `qga/run_rqga_authors_code.py` | `run_rqga_authors_code-*.txt` (authors' code, Qiskit Aer) | Sec. 4 |
 | `qga/certify_rqga.py` | `certify_rqga-*.txt` (exact uniformity, 20 cases) | Sec. 4 |
-| `qga/check_aer.py` | cross-check of exact vs. Aer marginals | Sec. 4 |
+| `qga/check_aer.py` | cross-check of exact vs. Aer marginals (prints to the terminal) | Sec. 4 |
 | `qga/certify_product_state.py` | `certify_product_state-*.txt` (verifier, cases, negative controls) | Sec. 5 |
 | `qga/certify_qaco.py` | `certify_qaco-*.txt` | Sec. 5 |
-| `qga/souza_v1.py`, `qga/center_bias.py` | reimplementation of the ablation example (library); `center_bias-*.txt` | Sec. 6, Suppl. S2 |
-| `qga/ablation_souza.py` | `ablation_souza-*.txt`, `.npz` (protocol: `ablacao_protocolo-2026-11-14.md`) | Sec. 6 |
-| `qga/certify_pairs.py` | `certify_pairs-*.txt` (exact reduction of entanglement between individuals) | Sec. 6 |
-| `qga/experiment_souza_v1.py` | `experiment_souza_v1-*.txt` | Sec. 6 |
-| `qga/analog_exact.py`, `analog_exact_ring.py`, `analog_fitness.py`, `analog_center.py` | `analog_*-*.txt` | Suppl. S3 |
-| `qga/sensitivity_souza.py` | `sensitivity_souza-*.txt` | Suppl. S4 |
-| `qga/certify_souza.py`, `certify_souza_v1.py` | `certify_souza*-*.txt` (Schmidt rank, separability) | Sec. 6 |
-| `qga/entropy_functions_souza.py` | `entropy_functions_souza-*.txt` | Sec. 6 |
-| `qga/check_pinsker.py` | `check_pinsker-*.txt` | Suppl. |
-| `qga/test_souza_v1.py` | unit tests of the reimplementation | — |
 
 Scripts write a new file named with the current date; the files committed here are the ones cited in
 the article.
@@ -44,8 +34,8 @@ root, for example:
 python scripts/qga/rqga2006_exact.py --exemplo 2
 ```
 
-The longest runs are `ablation_souza.py` (about 2 h on 16 cores), `sensitivity_souza.py` (about
-4.5 h) and `entropy_functions_souza.py` (about 3 h).
+Every script finishes in a few minutes on a laptop; the longest is `run_rqga_authors_code.py`
+(about 4 min).
 
 ## Third-party code
 
@@ -69,19 +59,15 @@ In the original working repository, the circuit converter lived in a larger scri
 depended on MQT Bench. `qiskit_convert.py` contains the same functions, unchanged, so that MQT Bench
 is not needed.
 
-## Language of the code
+## Language of the code and original results
 
 The code was written in Portuguese and later translated: comments, docstrings, output text and file
 names are in English. Identifiers (variable and function names) and a few strings used as data were
-kept in Portuguese, because renaming them would change the code that produced the results. The most
-visible ones are the evaluator modes printed in some tables: `quantico` (quantum), `gemeo`
-(stochastic analog without interference) and `classico` (classical); and the function names
-`esfera` (sphere) and `rastrigin`.
+kept in Portuguese, because renaming them would change the code that produced the results.
 
 The results produced before the translation, with Portuguese file names and headers, are kept in
-`results/qga-pt-original/`. The pre-registered ablation protocol is the Portuguese file
-`results/qga/ablacao_protocolo-2026-11-14.md`, which remains the authoritative record;
-`ablation_protocol-2026-11-14.en.md` is an English translation of it.
+`results/qga-pt-original/`. Every script was re-run after the translation; the numbers in each new
+file are identical to those in the corresponding original file, except for run dates and timings.
 
 | Original name | Current name |
 |---|---|
@@ -94,19 +80,6 @@ The results produced before the translation, with Portuguese file names and head
 | `confere_aer.py` | `check_aer.py` |
 | `certifica_padrao1.py` | `certify_product_state.py` |
 | `certifica_qaco.py` | `certify_qaco.py` |
-| `vies_centro.py` | `center_bias.py` |
-| `ablacao_souza.py` | `ablation_souza.py` |
-| `certifica_pares.py` | `certify_pairs.py` |
-| `certifica_souza.py`, `certifica_souza_v1.py` | `certify_souza.py`, `certify_souza_v1.py` |
-| `exp_souza_v1.py` | `experiment_souza_v1.py` |
-| `gemeo_exato.py`, `gemeo_exato_anel.py` | `analog_exact.py`, `analog_exact_ring.py` |
-| `gemeo_aptidao.py`, `gemeo_centro.py` | `analog_fitness.py`, `analog_center.py` |
-| `sensibilidade_souza.py` | `sensitivity_souza.py` |
-| `entropia_funcoes_souza.py` | `entropy_functions_souza.py` |
-| `confere_pinsker.py` | `check_pinsker.py` |
-| `teste_souza_v1.py` | `test_souza_v1.py` |
-
-RERUN-CHECK: to be filled in after comparing the re-run with the original results.
 
 ## License
 
