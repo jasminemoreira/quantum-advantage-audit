@@ -6,7 +6,7 @@ AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI)); sys.path.insert(0, str(AQUI.parent / "qcalc"))
 import run_rqga_authors_code as V
 from sparse_engine import MotorEsparso
-from qiskit_convert import qiskit_convert
+from qiskit_convert import converte
 from certify_rqga import prob_decimal
 rng = np.random.default_rng(V.SEMENTE)
 g = nx.erdos_renyi_graph(3, 0.6, seed=int(rng.integers(2**31)))

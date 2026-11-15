@@ -1,0 +1,23 @@
+Center bias in Souza/Dardenne/Portugal (reimplementation) | seed 20261111 | 2026-11-15
+m=2 n=8 shots=1024 |P|=50 G=30 reps=100 d=5
+
+check 1: 50 G_cl circuits, state vector = classical bits? errors = 0
+check 1b: 20 G_qu circuits, max|psi_own - psi_qiskit| = 1.14e-16
+check 2: H on all, domain (-5.12, 5.12): exact mean = [0. 0.], f(mean) = 0.0000
+check 2: H on all, domain (-2.12, 8.12): exact mean = [3. 3.], f(mean) = 18.0000
+check 3: entangled pair, marginal of one register: max|p - 1/256| = 5.20e-18
+check 4: generation 0, domain (-5.12, 5.12), quantico: median f  25.751 | fraction with f < 1: 0.010
+check 4: generation 0, domain (-5.12, 5.12), gemeo   : median f  20.867 | fraction with f < 1: 0.023
+check 4: generation 0, domain (-5.12, 5.12), classico: median f  35.194 | fraction with f < 1: 0.000
+check 4: generation 0, domain (-2.12, 8.12), quantico: median f  40.224 | fraction with f < 1: 0.003
+check 4: generation 0, domain (-2.12, 8.12), gemeo   : median f  35.793 | fraction with f < 1: 0.000
+check 4: generation 0, domain (-2.12, 8.12), classico: median f  53.541 | fraction with f < 1: 0.000
+
+best f per generation (mean over repetitions; in parentheses, standard error)
+domain evaluator | g0 | g1 | g2 | g5 | g10 | g20 | g30
+(-5.12, 5.12) quantico | 1.771 (0.146) | 0.918 (0.105) | 0.533 (0.055) | 0.118 (0.013) | 0.027 (0.003) | 0.011 (0.001) | 0.006 (0.001)
+(-5.12, 5.12) gemeo    | 0.583 (0.059) | 0.250 (0.026) | 0.119 (0.015) | 0.032 (0.004) | 0.013 (0.001) | 0.006 (0.001) | 0.004 (0.000)
+(-5.12, 5.12) classico | 7.262 (0.388) | 6.184 (0.330) | 5.286 (0.273) | 4.031 (0.192) | 3.180 (0.159) | 2.482 (0.118) | 2.352 (0.115)
+(-2.12, 8.12) quantico | 10.033 (0.412) | 8.175 (0.356) | 6.824 (0.322) | 4.968 (0.285) | 2.967 (0.195) | 1.759 (0.132) | 1.157 (0.094)
+(-2.12, 8.12) gemeo    | 11.541 (0.460) | 9.183 (0.414) | 8.219 (0.359) | 5.685 (0.317) | 3.284 (0.232) | 1.993 (0.147) | 1.533 (0.122)
+(-2.12, 8.12) classico | 7.775 (0.497) | 5.853 (0.362) | 4.793 (0.263) | 3.436 (0.200) | 2.881 (0.178) | 2.197 (0.132) | 1.982 (0.113)

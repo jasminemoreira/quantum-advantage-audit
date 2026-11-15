@@ -38,7 +38,7 @@ from qiskit.quantum_info import Statevector
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
 from sparse_engine import MotorEsparso, mult  # noqa: E402
-from qiskit_convert import qiskit_convert  # noqa: E402
+from qiskit_convert import converte  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 SEMENTE = 20261119

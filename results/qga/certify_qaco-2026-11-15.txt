@@ -1,0 +1,4 @@
+QACO (QMI 2022, doi 10.1007/s42484-022-00065-1) on the checker of Pattern 2 (product state) | seed 20261122 | 2026-11-15
+unconstrained (CNOT): classical sampling = [True] | TV max 2.5e-16 over 60 circuits
+constrained (Fredkin): classical sampling = [True] | TV max 6.5e-16 over 60 circuits
+all as expected: True

@@ -1,0 +1,27 @@
+RQGA and MaxCut-QGA on the exact sparse engine | seed 20261111 | 2026-11-15
+RQGA-coloring n=3 |E|=3 iter=1 | qubits=25 | gates=678 | k=16 | max support=4096 | bits=5 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.543945 | 0.2s
+RQGA-coloring n=3 |E|=3 iter=2 | qubits=25 | gates=763 | k=21 | max support=4096 | bits=8 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.548431 | 0.2s
+RQGA-coloring n=3 |E|=3 iter=3 | qubits=25 | gates=848 | k=28 | max support=8192 | bits=11 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.516296 | 0.5s
+RQGA-coloring n=3 |E|=3 iter=4 | qubits=25 | gates=933 | k=33 | max support=8192 | bits=13 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.519007 | 0.8s
+RQGA-coloring n=3 |E|=3 | fitness marginal changes from iter=1 to iter=4: True
+RQGA-coloring n=4 |E|=4 iter=1 | qubits=27 | gates=3041 | k=18 | max support=16384 | bits=5 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.642822 | 0.4s
+RQGA-coloring n=4 |E|=4 iter=2 | qubits=27 | gates=3127 | k=23 | max support=16384 | bits=8 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.648109 | 1.0s
+RQGA-coloring n=4 |E|=4 iter=3 | qubits=27 | gates=3213 | k=28 | max support=32768 | bits=10 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.608370 | 2.3s
+RQGA-coloring n=4 |E|=4 iter=4 | qubits=27 | gates=3299 | k=33 | max support=32768 | bits=12 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.609857 | 3.6s
+RQGA-coloring n=4 |E|=4 | fitness marginal changes from iter=1 to iter=4: True
+MaxCut-QGA n=4 |E|=4 iter=1 | qubits=23 | gates=187 | k=14 | max support=1024 | bits=5 | ind (N=4) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.353516 | 0.0s
+MaxCut-QGA n=4 |E|=4 iter=2 | qubits=23 | gates=273 | k=19 | max support=1024 | bits=7 | ind (N=4) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.353088 | 0.0s
+MaxCut-QGA n=4 |E|=4 iter=3 | qubits=23 | gates=359 | k=24 | max support=1568 | bits=10 | ind (N=4) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.333879 | 0.1s
+MaxCut-QGA n=4 |E|=4 iter=4 | qubits=23 | gates=445 | k=29 | max support=2048 | bits=12 | ind (N=4) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.333993 | 0.1s
+MaxCut-QGA n=4 |E|=4 | fitness marginal changes from iter=1 to iter=4: True
+MaxCut-QGA n=6 |E|=7 iter=1 | qubits=25 | gates=623 | k=16 | max support=4096 | bits=5 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.294922 | 0.1s
+MaxCut-QGA n=6 |E|=7 iter=2 | qubits=25 | gates=707 | k=21 | max support=4096 | bits=7 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.294495 | 0.2s
+MaxCut-QGA n=6 |E|=7 iter=3 | qubits=25 | gates=791 | k=26 | max support=8192 | bits=10 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.280329 | 0.5s
+MaxCut-QGA n=6 |E|=7 iter=4 | qubits=25 | gates=875 | k=31 | max support=8192 | bits=12 | ind (N=6) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.280417 | 0.8s
+MaxCut-QGA n=6 |E|=7 | fitness marginal changes from iter=1 to iter=4: True
+MaxCut-QGA n=8 |E|=10 iter=1 | qubits=27 | gates=2780 | k=18 | max support=16384 | bits=5 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.243652 | 0.4s
+MaxCut-QGA n=8 |E|=10 iter=2 | qubits=27 | gates=2865 | k=23 | max support=16384 | bits=7 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.243263 | 1.0s
+MaxCut-QGA n=8 |E|=10 iter=3 | qubits=27 | gates=2950 | k=30 | max support=32768 | bits=11 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.230019 | 5.6s
+MaxCut-QGA n=8 |E|=10 iter=4 | qubits=27 | gates=3035 | k=35 | max support=32768 | bits=13 | ind (N=8) exactly uniform=True | Parseval=True | fitness: 32 values, largest P=0.230379 | 3.5s
+MaxCut-QGA n=8 |E|=10 | fitness marginal changes from iter=1 to iter=4: True
+all certified: True

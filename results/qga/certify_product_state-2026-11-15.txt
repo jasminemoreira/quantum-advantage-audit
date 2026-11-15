@@ -1,0 +1,34 @@
+Structural certificate of Pattern 2 (product state) (classical sampling) | seed 20261119 | 2026-11-15
+circuits checked on 14 Nov against Ballinas 2022 Fig. 2, Ballinas 2024 Fig. 4 and text, EAQGA v1 Alg. 1, Gamberi v1 Alg. 3, Saini Figs. 3 and 5; cross-check: TV(sampler, statevector) with randomly drawn angles
+
+Ballinas 2022 (Fig. 2): classified as classical sampling = [True] (expected True) | TV max 1.5e-15 over 60 circuits | OK
+   exact prefix 11 gates, product; exact prefix 17 gates, product; exact prefix 26 gates, product
+Ballinas 2024 (Fig. 4, no X): classified as classical sampling = [True] (expected True) | TV max 1.6e-15 over 60 circuits | OK
+   exact prefix 10 gates, product; exact prefix 16 gates, product; exact prefix 25 gates, product
+Ballinas 2024 (text: X on the ancilla): classified as classical sampling = [True] (expected True) | TV max 1.6e-15 over 60 circuits | OK
+   exact prefix 11 gates, product; exact prefix 17 gates, product; exact prefix 26 gates, product
+Ballinas 2024 (text: ancilla controls): classified as classical sampling = [True] (expected True) | TV max 1.6e-15 over 60 circuits | OK
+   exact prefix 11 gates, product; exact prefix 17 gates, product; exact prefix 26 gates, product
+EAQGA, star (text): classified as classical sampling = [True] (expected True) | TV max 1.8e-16 over 60 circuits | OK
+   exact prefix 0 gates, product
+EAQGA, chain (pseudocode): classified as classical sampling = [True] (expected True) | TV max 2.3e-16 over 60 circuits | OK
+   exact prefix 0 gates, product
+Gamberi 2026 (Algorithm 3): classified as classical sampling = [True] (expected True) | TV max 1.7e-15 over 60 circuits | OK
+   exact prefix 3 gates, product; exact prefix 5 gates, product; exact prefix 8 gates, product
+Saini 2025 (Fig. 3): classified as classical sampling = [True] (expected True) | TV max 2.5e-16 over 60 circuits | OK
+   exact prefix 0 gates, product
+control: R2 with target in superposition: classified as classical sampling = [False] (expected False) | no sampler | OK
+   gate non-monomial ry on a coupled qubit without a copy (gate 3)
+control: R2 with disturbed witness: classified as classical sampling = [False] (expected False) | no sampler | OK
+   gate ry on an already used witness (gate 3)
+control: H-CNOT-H: classified as classical sampling = [False] (expected False) | no sampler | OK
+   exact-prefix state (3 gates) is not a product state
+control: QAOA layer: classified as classical sampling = [False] (expected False) | no sampler | OK
+   gate non-monomial rx on a coupled qubit without a copy (gate 15); gate non-monomial rx on a coupled qubit without a copy (gate 5); gate non-monomial rx on a coupled qubit without a copy (gate 9)
+control: Bell state in the prefix: classified as classical sampling = [False] (expected False) | no sampler | OK
+   exact-prefix state (2 gates) is not a product state
+
+EAQGA with 100 qubits: classical sampling = True (exact prefix 0 gates, product; 277 gates after; 100 coupled qubits; rule R2 used 32 times) | 0.00s
+Ballinas with 16 data qubits: classical sampling = True (exact prefix 50 gates, product; 33 gates after; 0 coupled qubits; rule R2 used 0 times) | 0.86s
+
+all as expected: True

@@ -31,7 +31,7 @@ sys.path.insert(0, str(AQUI))
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
 import run_rqga_authors_code as V  # noqa: E402
 from sparse_engine import MotorEsparso  # noqa: E402
-from qiskit_convert import qiskit_convert  # noqa: E402
+from qiskit_convert import converte  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 

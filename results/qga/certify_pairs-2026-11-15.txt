@@ -1,0 +1,4 @@
+Reduction of entanglement between individuals, checked in the ring | seed 20261114 | 2026-11-15
+1-register individuals (n=8), pair of 16 qubits, G_qu with v1 operators, 30 pairs per mode
+max: marginal of A == exact prediction in 30/30 | max k 16 | max support 65536 | control (prediction without entanglement fails) in 28/30
+bell: marginal of A == exact prediction in 30/30 | max k 14 | max support 16384 | control (prediction without entanglement fails) in 30/30

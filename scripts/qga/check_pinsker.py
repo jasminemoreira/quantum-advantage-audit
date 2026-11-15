@@ -4,6 +4,8 @@ Global bound:   |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (N - H(p)) / 2)
 Marginal bound: |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (n - H(p_i)) / 2), p_i = marginal of register i
 """
 import sys
+from datetime import date
+from pathlib import Path
 import numpy as np
 sys.path.insert(0, str(__import__('pathlib').Path(__file__).resolve().parent))
 import souza_v1 as S  # noqa: E402
@@ -42,5 +44,9 @@ for k in range(400):
             pior_g = max(pior_g, d / cg)
         if cm > 0:
             pior_m = max(pior_m, d / cm)
-print(f"N={S.NQ}, n={S.NB}, m={S.M}; 400 individuals; violations (d > marginal bound or marginal > global): {viol}")
-print(f"largest ratio d/global bound {pior_g:.3f}; d/marginal bound {pior_m:.3f}")
+L = [f"Numerical check of the Pinsker bound (center bias) | seed 20261120 | {date.today()}",
+     f"N={S.NQ}, n={S.NB}, m={S.M}; 400 individuals; violations (d > marginal bound or marginal > global): {viol}",
+     f"largest ratio d/global bound {pior_g:.3f}; d/marginal bound {pior_m:.3f}"]
+print("\n".join(L))
+RAIZ = Path(__file__).resolve().parents[2]
+(RAIZ / "results" / "qga" / f"check_pinsker-{date.today()}.txt").write_text("\n".join(L) + "\n")
