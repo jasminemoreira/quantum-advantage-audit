@@ -1,12 +1,12 @@
 """Recertification of the entanglement inside each individual, with the v1 operators (13 Nov 2026).
 
-Same exact tests as certifica_souza.py (separability between the registers, certified Schmidt
+Same exact tests as certify_souza.py (separability between the registers, certified Schmidt
 rank, entangled qubits, factorization of p(x), marginals), now with the best final individuals
 of the GA in souza_v1.py (|P| = 50, 30 generations, 20 repetitions per domain) and 100 initial
 individuals drawn by the v1 initialization. Includes the Spearman correlation between f and the rank.
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_souza_v1.py
-Output: resultados/qga/certifica_souza_v1-<date>.txt
+Usage: python scripts/qga/certify_souza_v1.py
+Output: results/qga/certify_souza_v1-<date>.txt
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from scipy.stats import spearmanr
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-import certifica_souza as CS  # noqa: E402
+import certify_souza as CS  # noqa: E402
 import souza_v1 as S  # noqa: E402
 
 RAIZ = AQUI.parents[1]
@@ -59,7 +59,7 @@ def main():
             linhas.append(f"{c['rotulo']} | {c['f']:.4f} | {c['k']} | {c['suporte']} | {c['sep']} | {c['pinf']} | "
                           f"{c['psvd']} | {c['emar']} | {c['fatora']} | {c['meio']}")
     print("\n".join(linhas[:9]))
-    (RAIZ / "resultados" / "qga" / f"certifica_souza_v1-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
+    (RAIZ / "results" / "qga" / f"certify_souza_v1-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0
 
 

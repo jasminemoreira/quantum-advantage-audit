@@ -1,6 +1,6 @@
 """Experiments with the v1 operators (souza_v1.py), 13 Nov 2026.
 
-Part A (redoes vies_centro.py): |P| = 50, 30 generations, 100 repetitions; quantum evaluator,
+Part A (redoes center_bias.py): |P| = 50, 30 generations, 100 repetitions; quantum evaluator,
 classical stochastic analog without interference (H -> coin, Y -> X, phases removed) and classical
 evaluator (G_cl); centered domain [-5.12, 5.12] (optimum at the center) and shifted domain
 [-2.12, 8.12] (center at x = 3, optimum at x = 0).
@@ -15,8 +15,8 @@ domain for any circuit; on the centered domain this is the optimum, on the shift
 Reports the best evaluated f per generation (with shot noise, as in the article) and, for the
 quantum evaluator, the exact f(E[x]) of the best final individual.
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/exp_souza_v1.py
-Output: resultados/qga/exp_souza_v1-<date>.txt
+Usage: python scripts/qga/experiment_souza_v1.py
+Output: results/qga/experiment_souza_v1-<date>.txt
 """
 from __future__ import annotations
 
@@ -90,7 +90,7 @@ def main():
             linhas.append(f"{dom} {modo}+{emar} | " + " | ".join(partes))
     linhas.append(f"\ntime {time.time() - t0:.0f}s")
     print("\n".join(linhas))
-    (RAIZ / "resultados" / "qga" / f"exp_souza_v1-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
+    (RAIZ / "results" / "qga" / f"experiment_souza_v1-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0
 
 

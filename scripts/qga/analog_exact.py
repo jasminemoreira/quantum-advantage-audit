@@ -13,8 +13,8 @@ Classes of each individual:
   fora      : does not obey Theorem 1 (interference may occur).
 Check: exact distribution of the analog (probability propagation) against p_quantico (statevector).
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato.py
-Output: resultados/qga/gemeo_exato-<date>.txt
+Usage: python scripts/qga/analog_exact.py
+Output: results/qga/analog_exact-<date>.txt
 """
 from __future__ import annotations
 
@@ -146,7 +146,7 @@ def main():
     ok = all(tv < 1e-12 for k, tv in r_ini + [r for _, r in r_fin] if k == "corolario")
     L.append(f"\nprediction confirmed (TV < 1e-12 in every 'corolario'): {ok}")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"gemeo_exato-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"analog_exact-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0
 
 

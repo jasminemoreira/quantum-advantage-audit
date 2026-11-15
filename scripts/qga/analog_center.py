@@ -1,15 +1,15 @@
 """Hypothesis: the final individuals that differ from the analog are better on the centered domain
 because they are closer to the center.
 
-Same GAs as gemeo_aptidao.py (same seeds, 100 per domain). For each best final individual:
+Same GAs as analog_fitness.py (same seeds, 100 per domain). For each best final individual:
 igual (decided in the ring), fq = exact quantum f(E[x]), distance from E[x] to the domain center,
 distance from E[x] to the optimum (origin), entropy H of the output in bits.
 Prediction (center bias): on the centered domain, the different ones have E[x] closer to the center
 (= optimum) and higher entropy; on the shifted domain, if they lie closer to the center, this does
 not bring them closer to the optimum.
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_centro.py
-Output: resultados/qga/gemeo_centro-<date>.txt
+Usage: python scripts/qga/analog_center.py
+Output: results/qga/analog_center-<date>.txt
 """
 from __future__ import annotations
 
@@ -25,10 +25,10 @@ from scipy.stats import mannwhitneyu, spearmanr
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
-import gemeo_exato as GE  # noqa: E402
-import gemeo_exato_anel as A  # noqa: E402
+import analog_exact as GE  # noqa: E402
+import analog_exact_ring as A  # noqa: E402
 import souza_v1 as S  # noqa: E402
-import vies_centro as VC  # noqa: E402
+import center_bias as VC  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 REPS = 100
@@ -61,7 +61,7 @@ def main():
     with Pool(16) as pool:
         rs = pool.map(tarefa, tarefas, chunksize=1)
     L = [f"Distance to the center: final individuals equal to the analog x different | seed {GE.SEMENTE} | {date.today()}",
-         f"|P|=50, G=30, {REPS} GAs per domain (same as gemeo_aptidao.py); medians", ""]
+         f"|P|=50, G=30, {REPS} GAs per domain (same as analog_fitness.py); medians", ""]
     for d in GE.DOMINIOS:
         sub = [r for r in rs if r[0] == d]
         dif = [r for r in sub if not r[1]]
@@ -78,7 +78,7 @@ def main():
         L.append("")
     L.append(f"time {time.time() - t0:.0f}s")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"gemeo_centro-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"analog_center-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0
 
 

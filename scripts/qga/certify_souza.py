@@ -1,6 +1,6 @@
 """Exact certification of entanglement in Souza, Dardenne and Portugal (13 Nov 2026).
 
-Question: are the individuals selected by the quantum GA (reimplementation in vies_centro.py)
+Question: are the individuals selected by the quantum GA (reimplementation in center_bias.py)
 actually entangled, and can the entanglement influence the fitness?
 
 Analytical remark (to be checked against their article): the fitness is f(x*), x* = mean of the
@@ -20,8 +20,8 @@ randomly drawn initial individuals), in the exact sparse engine over Z[zeta_16]:
   (4) does p(x) factor between the registers? P(x1,x2) == P1(x1) P2(x2), exactly;
   (5) do the exact one-qubit marginals belong to {0, 1/2, 1}?
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_souza.py
-Output: resultados/qga/certifica_souza-<date>.txt
+Usage: python scripts/qga/certify_souza.py
+Output: results/qga/certify_souza-<date>.txt
 """
 from __future__ import annotations
 
@@ -35,8 +35,8 @@ import numpy as np
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
-import vies_centro as VC  # noqa: E402
-from esparso import MotorEsparso, conj, mult  # noqa: E402
+import center_bias as VC  # noqa: E402
+from sparse_engine import MotorEsparso, conj, mult  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 SEMENTE = 20261113
@@ -290,7 +290,7 @@ def main():
         if c["rotulo"].startswith("final"):
             linhas.append(f"{c['rotulo']} | {c['f']:.4f} | {c['k']} | {c['suporte']} | {c['sep']} | {c['pinf']} | "
                           f"{c['psvd']} | {c['emar']} | {c['fatora']} | {c['meio']}")
-    (RAIZ / "resultados" / "qga" / f"certifica_souza-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
+    (RAIZ / "results" / "qga" / f"certify_souza-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0
 
 

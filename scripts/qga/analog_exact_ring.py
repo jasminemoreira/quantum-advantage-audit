@@ -1,15 +1,15 @@
 """EXACT decision of 'classical analog = quantum circuit', individual by individual (14 Nov 2026).
 
-Same individuals as gemeo_exato.py (same seed: 300 drawn initial individuals and the best final
+Same individuals as analog_exact.py (same seed: 300 drawn initial individuals and the best final
 individuals of 30 GAs per domain). For each one:
   - exact quantum distribution in the sparse engine over Z[zeta_16]: P(x) = num(x) / 2^k;
   - exact distribution of the analog in dyadic rationals: P(x) = w(x) / 2^h, h = number of H gates;
   - equality decided without floating point: 2^h * num(x) == w(x) * 2^k * (1, 0, ..., 0) for every x.
 Reports, per corollary class (corolario, so_T1, fora), how many are exactly equal and checks against
-the floating-point TV of gemeo_exato.py.
+the floating-point TV of analog_exact.py.
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato_anel.py
-Output: resultados/qga/gemeo_exato_anel-<date>.txt
+Usage: python scripts/qga/analog_exact_ring.py
+Output: results/qga/analog_exact_ring-<date>.txt
 """
 from __future__ import annotations
 
@@ -24,8 +24,8 @@ import numpy as np
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
-import certifica_souza as CS  # noqa: E402
-import gemeo_exato as GE  # noqa: E402
+import certify_souza as CS  # noqa: E402
+import analog_exact as GE  # noqa: E402
 import souza_v1 as S  # noqa: E402
 
 RAIZ = AQUI.parents[1]
@@ -104,7 +104,7 @@ def main():
         r_ini = pool.map(decide, iniciais, chunksize=4)
         r_fin = pool.map(final, [(d, GE.SEMENTE + 1000 * k + r) for k, d in enumerate(GE.DOMINIOS)
                                  for r in range(GE.REPS)], chunksize=1)
-    L = [f"Analog = quantum decided in the ring Z[zeta_16] | seed {GE.SEMENTE} (that of gemeo_exato.py) | {date.today()}",
+    L = [f"Analog = quantum decided in the ring Z[zeta_16] | seed {GE.SEMENTE} (that of analog_exact.py) | {date.today()}",
          "exact equality of the full measured distributions (16 qubits); classes of Corollary 1", ""]
     L += resumo("drawn initial individuals (G_qu, v1)", r_ini)
     fins = []
@@ -118,7 +118,7 @@ def main():
     L.append(f"disagreements between the exact check and the float criterion TV < 1e-12: {disc}")
     L.append(f"time {time.time() - t0:.0f}s; longest time per individual {max(r[3] for r in r_ini + fins):.1f}s")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"gemeo_exato_anel-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"analog_exact_ring-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0
 
 

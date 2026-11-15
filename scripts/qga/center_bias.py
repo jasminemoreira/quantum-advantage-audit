@@ -24,8 +24,8 @@ Three evaluators over the same genetic operators:
 Two domains: centered [-5.12, 5.12] (optimum at the center) and shifted [-2.12, 8.12] (optimum
 x=0 far from the center, which lies at x=3).
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/vies_centro.py
-Output: resultados/qga/vies_centro-<date>.txt
+Usage: python scripts/qga/center_bias.py
+Output: results/qga/center_bias-<date>.txt
 """
 from __future__ import annotations
 
@@ -281,9 +281,9 @@ def main():
             linhas.append(f"{dom} {modo:8s} | " + " | ".join(f"{med[g]:.3f} ({ep[g]:.3f})" for g in gens))
     texto = "\n".join(linhas)
     print("\n".join(linhas[-8:]))
-    destino = RAIZ / "resultados" / "qga"
+    destino = RAIZ / "results" / "qga"
     destino.mkdir(parents=True, exist_ok=True)
-    (destino / f"vies_centro-{date.today()}.txt").write_text(texto + "\n")
+    (destino / f"center_bias-{date.today()}.txt").write_text(texto + "\n")
     return 0
 
 

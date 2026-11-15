@@ -51,13 +51,13 @@ The longest runs are `ablacao_souza.py` (about 2 h on 16 cores), `sensibilidade_
 ## Third-party code
 
 `verifica_rqga.py` and `certifica_rqga.py` execute the public code of two published works, which is
-not included here. Clone them into `externos/` at the commits used:
+not included here. Clone them into `external/` at the commits used:
 
 ```
-git clone https://github.com/sebastianardelean/graphcoloringusingrqga externos/rqga
-git -C externos/rqga checkout a018d70
-git clone https://github.com/pauloaviana/maxcut-qga externos/maxcut-qga
-git -C externos/maxcut-qga checkout 23533c4
+git clone https://github.com/sebastianardelean/graphcoloringusingrqga external/rqga
+git -C external/rqga checkout a018d70
+git clone https://github.com/pauloaviana/maxcut-qga external/maxcut-qga
+git -C external/maxcut-qga checkout 23533c4
 ```
 
 The only changes needed to run them are API updates (`mct` → `mcx`), a fixed graph seed and an empty

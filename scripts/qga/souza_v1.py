@@ -1,5 +1,5 @@
 """Reimplementation of Souza, Dardenne and Portugal (arXiv 2511.05254 v1) with the operators of the
-current text (13 Nov 2026). Replaces the operators of vies_centro.py, which followed the method
+current text (13 Nov 2026). Replaces the operators of center_bias.py, which followed the method
 marked "OLD METHOD" (commented out) in the TeX source.
 
 Fixed by the text (Gate-Based-QGA.tex, sections 3.1 to 3.8 and 4):
@@ -36,13 +36,13 @@ with rho_A0 = Tr_B |Phi><Phi|, whatever the circuit of B and the pairing. Two re
   - "bell": |Phi> = (|b_A b_B> + |~b_A ~b_B>)/sqrt(2) (one ebit, with ~ the bitwise complement);
     rho_A0 = (|b><b| + |~b><~b|)/2.
 In both, the entangled individual is exactly equivalent to an individual with a random classical
-initial state. The reduction is checked exactly in certifica_pares.py.
+initial state. The reduction is checked exactly in certify_pairs.py.
 """
 from __future__ import annotations
 
 import numpy as np
 
-import vies_centro as VC
+import center_bias as VC
 
 M, NB, NQ, DIM = VC.M, VC.NB, VC.NQ, VC.DIM
 SHOTS, PROF = VC.SHOTS, VC.PROF
@@ -52,7 +52,7 @@ UM = 1  # arities
 TODOS = (1 << NQ) - 1
 
 # Choices not fixed by the text, as options (default = the declared choices above); used in the
-# sensitivity analysis (sensibilidade_souza.py). Alternatives:
+# sensitivity analysis (sensitivity_souza.py). Alternatives:
 #   prof: integer; selecao: "torneio" (tournament) | "roleta" (roulette, prob. proportional to 1/(1+f));
 #   regiao: "por_registro" (per register) | "global" (the k least significant qubits of the whole
 #     string, which all lie in the last register); colisao: "descarta_vem" | "descarta_fica" (the
@@ -120,7 +120,7 @@ def individuo(rng, conjunto, nq=NQ, prof=PROF):
 
 
 def sem_i(ind):
-    """vies_centro format (no I gates), used by the simulators."""
+    """center_bias format (no I gates), used by the simulators."""
     return {"base": ind["base"], "cams": [[g for g in cam if g[0] != "i"] for cam in ind["cams"]]}
 
 

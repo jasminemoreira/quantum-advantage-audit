@@ -1,15 +1,15 @@
 """Are the best final individuals that differ from the analog better? (14 Nov 2026)
 
-For the best final individuals (|P| = 50, G = 30, 100 GAs per domain; seeds of gemeo_exato.py,
+For the best final individuals (|P| = 50, G = 30, 100 GAs per domain; seeds of analog_exact.py,
 which include the 30 already analysed), computes:
-  - igual: analog exactly equal to the quantum circuit (decided in the ring, gemeo_exato_anel.decide);
+  - igual: analog exactly equal to the quantum circuit (decided in the ring, analog_exact_ring.decide);
   - fq: exact f(E[x]) (no shot noise) from the quantum distribution;
   - fg: f(E[x]) from the exact distribution of the analog of the same individual.
 Compares (a) fq between the equal / different groups (Mann-Whitney) and (b) within the different
 ones, fq against fg (what interference does to that individual; paired Wilcoxon).
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_aptidao.py
-Output: resultados/qga/gemeo_aptidao-<date>.txt
+Usage: python scripts/qga/analog_fitness.py
+Output: results/qga/analog_fitness-<date>.txt
 """
 from __future__ import annotations
 
@@ -25,10 +25,10 @@ from scipy.stats import mannwhitneyu, wilcoxon
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 sys.path.insert(0, str(AQUI.parent / "qcalc"))
-import gemeo_exato as GE  # noqa: E402
-import gemeo_exato_anel as A  # noqa: E402
+import analog_exact as GE  # noqa: E402
+import analog_exact_ring as A  # noqa: E402
 import souza_v1 as S  # noqa: E402
-import vies_centro as VC  # noqa: E402
+import center_bias as VC  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 REPS = 100
@@ -79,7 +79,7 @@ def main():
         L.append("")
     L.append(f"time {time.time() - t0:.0f}s")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"gemeo_aptidao-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"analog_fitness-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0
 
 

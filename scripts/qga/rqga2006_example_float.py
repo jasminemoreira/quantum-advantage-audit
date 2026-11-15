@@ -10,8 +10,8 @@ Here: oracle = phase -1 on the marked fitness values (those of u = 6 and 7 in Eq
 probability of measuring a marked fitness. Prediction (Theorem 2 of provas-2026-11-14.md): marginal
 of the individuals uniform at every iteration.
 
-Usage: python scripts/qga/rqga2006_exemplo.py
-Output: resultados/qga/rqga2006_exemplo-<data>.txt
+Usage: python scripts/qga/rqga2006_example_float.py
+Output: results/qga/rqga2006_example_float-<data>.txt
 """
 from datetime import date
 from pathlib import Path
@@ -42,4 +42,4 @@ for k in range(0, 13):
     L.append(f"{k:2d} | {pind.min():.6f}, {pind.max():.6f} | {pind[6] + pind[7]:.4f} | {sum(pfit[y] for y in MARC):.4f}")
 L.append("paper (Eq. 17): |a6|^2 + |a7|^2 ~ 1 after the Grover iterations")
 print("\n".join(L))
-(RAIZ / "resultados" / "qga" / f"rqga2006_exemplo-{date.today()}.txt").write_text("\n".join(L) + "\n")
+(RAIZ / "results" / "qga" / f"rqga2006_example_float-{date.today()}.txt").write_text("\n".join(L) + "\n")

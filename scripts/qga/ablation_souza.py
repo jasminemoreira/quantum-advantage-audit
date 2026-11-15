@@ -1,8 +1,8 @@
 """Ablation of the Souza, Dardenne and Portugal case under the protocol fixed in
-resultados/qga/ablacao_protocolo-2026-11-14.md (14 Nov 2026).
+results/qga/ablacao_protocolo-2026-11-14.md (14 Nov 2026).
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/ablacao_souza.py [--reps N]
-Outputs: resultados/qga/ablacao_souza-<date>.txt (report) and .npz (curves).
+Usage: python scripts/qga/ablation_souza.py [--reps N]
+Outputs: results/qga/ablation_souza-<date>.txt (report) and .npz (curves).
 """
 from __future__ import annotations
 
@@ -95,7 +95,7 @@ def main():
     for func, alfa, modo, c in res:
         cur.setdefault((func, alfa, modo), []).append(c)
     cur = {k: np.log(np.array(v) + EPS) for k, v in cur.items()}  # (reps, GER+1)
-    np.savez_compressed(RAIZ / "resultados" / "qga" / f"ablacao_souza-{date.today()}.npz",
+    np.savez_compressed(RAIZ / "results" / "qga" / f"ablation_souza-{date.today()}.npz",
                         **{f"{f}|{a}|{m}": v for (f, a, m), v in cur.items()})
 
     L = [f"Souza ablation (protocol ablacao_protocolo-2026-11-14.md) | seed {SEMENTE} | reps {reps} | {date.today()}",
@@ -154,7 +154,7 @@ def main():
     L += ["    " + x for x in atras[:60]]
     L.append(f"\ntime {time.time() - t0:.0f}s")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"ablacao_souza-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"ablation_souza-{date.today()}.txt").write_text("\n".join(L) + "\n")
 
 
 if __name__ == "__main__":

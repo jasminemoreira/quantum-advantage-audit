@@ -1,4 +1,4 @@
 __pycache__/
 *.pyc
-externos/*
-!externos/README.md
+external/*
+!external/README.md

@@ -12,8 +12,8 @@ Circuit reconstructed from the text:
   - measures the ants.
 Prediction: classified as classical sampling (Theorem 1); sampler = statevector.
 
-Usage (WSL): externos/mqtbench/.venv/bin/python scripts/qga/certifica_qaco.py
-Output: resultados/qga/certifica_qaco-<data>.txt
+Usage: python scripts/qga/certify_qaco.py
+Output: results/qga/certify_qaco-<data>.txt
 """
 import sys
 from datetime import date
@@ -25,7 +25,7 @@ from qiskit.quantum_info import Statevector
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-import certifica_padrao1 as P1  # noqa: E402
+import certify_product_state as P1  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 SEMENTE = 20261122
@@ -77,7 +77,7 @@ def main():
                  f"TV max {max(tvs):.1e} over {len(tvs)} circuits")
     L.append(f"all as expected: {tudo}")
     print("\n".join(L))
-    (RAIZ / "resultados" / "qga" / f"certifica_qaco-{date.today()}.txt").write_text("\n".join(L) + "\n")
+    (RAIZ / "results" / "qga" / f"certify_qaco-{date.today()}.txt").write_text("\n".join(L) + "\n")
 
 
 if __name__ == "__main__":

@@ -12,10 +12,10 @@ support the argument of the article:
   P7 entanglement within the best final individual: more frequent on the centered than on the shifted domain.
 Part A: |P| = 50, 30 generations, 50 repetitions. Part B: |P| = 10, 30 generations, 100 repetitions.
 Schmidt rank between the registers computed in floating point (SVD, cutoff 1e-8); the exact
-version was already done for the default variant in certifica_souza_v1.py.
+version was already done for the default variant in certify_souza_v1.py.
 
-Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/sensibilidade_souza.py [variant ...]
-Output: resultados/qga/sensibilidade_souza-<date>.txt
+Usage: python scripts/qga/sensitivity_souza.py [variant ...]
+Output: results/qga/sensitivity_souza-<date>.txt
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ import numpy as np
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 import souza_v1 as S  # noqa: E402
-import vies_centro as VC  # noqa: E402
+import center_bias as VC  # noqa: E402
 
 RAIZ = AQUI.parents[1]
 SEMENTE = 20261117
@@ -139,7 +139,7 @@ def main():
         resumo.append(f"{var:16s} " + " ".join("yes" if ok[k] else "NO" for k in ok))
     linhas += ["summary (P1 to P7):"] + resumo + [f"\ntime {time.time() - t0:.0f}s"]
     print("\n".join(linhas))
-    (RAIZ / "resultados" / "qga" / f"sensibilidade_souza-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
+    (RAIZ / "results" / "qga" / f"sensitivity_souza-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0
 
 

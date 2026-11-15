@@ -2,20 +2,20 @@
 Grover iterations.
 
 Uses the authors' public code, without rewriting the circuits:
-  - Ardelean and Udrescu (PeerJ CS 2022), externos/rqga (commit a018d70), graph_coloring.ipynb:
+  - Ardelean and Udrescu (PeerJ CS 2022), external/rqga (commit a018d70), graph_coloring.ipynb:
     the functions get_ufit_instruction, get_oracle_instruction and get_grover_iteration_subcircuit
     are extracted from the notebook and run as they are. The only API adjustments: QuantumCircuit.mct
     (removed in Qiskit 1.0) becomes mcx, and the graph is generated with a seed instead of init_graph
     (nx.to_numpy_matrix was removed in networkx 3).
-  - Viana and de Paula Neto (arXiv 2501.01058), externos/maxcut-qga (commit 23533c4): the class
+  - Viana and de Paula Neto (arXiv 2501.01058), external/maxcut-qga (commit 23533c4): the class
     FragmentedQGA is imported as it is (the metis module, used only in preprocessing, is
     replaced by an empty module).
 The circuit is built with the same lines as run_algorithm() / FragmentedQGA.run(), and Aer
 (statevector) returns the exact distribution of the measured register (individuals) and, for contrast,
 that of the fitness register, which Grover does change.
 
-Usage (WSL): bash scripts/qga/rodar.sh
-Output: resultados/qga/verifica_rqga-<data>.txt
+Usage: python scripts/qga/run_rqga_authors_code.py
+Output: results/qga/run_rqga_authors_code-<data>.txt
 """
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ from qiskit import ClassicalRegister, QuantumCircuit, QuantumRegister, transpile
 from qiskit_aer import AerSimulator
 
 RAIZ = Path(__file__).resolve().parents[2]
-EXT = RAIZ / "externos"
+EXT = RAIZ / "external"
 SEMENTE = 20261111
 SIM = AerSimulator(method="statevector")
 QuantumCircuit.mct = lambda self, controles, alvo: self.mcx(controles, alvo)
@@ -166,9 +166,9 @@ def main():
                           f"{tv(p_ind, unif):.2e} | {tv(p_fit, ref_fit):.4f} | {chi2 / gl:.3f}")
             print(linhas[-1], flush=True)
     texto = "\n".join(linhas)
-    destino = RAIZ / "resultados" / "qga"
+    destino = RAIZ / "results" / "qga"
     destino.mkdir(parents=True, exist_ok=True)
-    (destino / f"verifica_rqga-{date.today()}.txt").write_text(texto + "\n")
+    (destino / f"run_rqga_authors_code-{date.today()}.txt").write_text(texto + "\n")
     return 0
 
 
