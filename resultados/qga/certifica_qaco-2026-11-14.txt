@@ -1,0 +1,4 @@
+QACO (QMI 2022, doi 10.1007/s42484-022-00065-1) no verificador do padrao 1 | semente 20261122 | 2026-11-14
+sem restricao (CNOT): amostragem classica = [True] | TV max 2.5e-16 em 60 circuitos
+com restricao (Fredkin): amostragem classica = [True] | TV max 6.5e-16 em 60 circuitos
+todos conforme o esperado: True

@@ -1,0 +1,19 @@
+Aptidao dos melhores finais: iguais ao gemeo x diferentes | semente 20261121 | 2026-11-14
+|P|=50, G=30, 100 AGs por dominio; fq = f(E[x]) quantica exata; fg = f(E[x]) do gemeo do mesmo individuo
+igualdade decidida no anel Z[zeta_16]; testes: Mann-Whitney (grupos), Wilcoxon pareado (fq x fg)
+
+dominio (-5.12, 5.12): iguais 61, diferentes 39
+  fq mediana: iguais 2.0138 | diferentes 1.4803
+  Mann-Whitney diferentes x iguais: p = 0.029 | fracao de pares (dif, igual) com dif melhor: 0.63
+  dentro dos diferentes: quantico melhor que o proprio gemeo em 30, pior em 7, empate em 2 | mediana fq - fg = -7.5061
+  Wilcoxon pareado fq x fg: p = 0.000
+  diferentes (fq, fg, classe): 0.000/0.000/fora; 0.000/0.000/fora; 0.080/0.000/fora; 0.080/0.000/fora; 0.120/0.000/fora; 0.160/0.000/fora; 0.160/0.080/fora; 0.451/0.040/fora; 0.636/15.545/fora; 1.083/14.471/fora; 1.187/15.619/fora; 1.190/14.751/fora; 1.242/14.670/fora; 1.242/3.096/fora; 1.246/16.776/fora; 1.329/17.584/fora; 1.329/3.714/fora; 1.333/5.328/fora; 1.422/1.571/fora; 1.480/2.415/fora; 1.505/12.414/fora; 1.505/15.759/fora; 1.551/2.063/fora; 1.571/12.546/so_T1; 1.590/4.289/fora; 1.749/1.964/fora; 1.898/20.219/fora; 2.017/13.384/fora; 2.039/32.207/fora; 2.091/11.741/fora; 2.162/9.669/fora; 2.181/2.953/fora; 2.221/9.738/fora; 2.564/16.393/fora; 2.707/19.811/fora; 2.721/14.463/fora; 3.094/2.430/fora; 3.493/18.089/fora; 8.509/8.839/fora
+
+dominio (-2.12, 8.12): iguais 76, diferentes 24
+  fq mediana: iguais 1.2342 | diferentes 1.3158
+  Mann-Whitney diferentes x iguais: p = 0.753 | fracao de pares (dif, igual) com dif melhor: 0.48
+  dentro dos diferentes: quantico melhor que o proprio gemeo em 20, pior em 3, empate em 1 | mediana fq - fg = -13.7877
+  Wilcoxon pareado fq x fg: p = 0.000
+  diferentes (fq, fg, classe): 0.027/28.735/fora; 0.027/13.964/fora; 0.228/19.440/fora; 0.266/20.789/fora; 0.280/0.214/fora; 0.467/17.254/fora; 0.519/3.482/fora; 0.622/20.309/fora; 1.068/1.783/so_T1; 1.136/20.897/fora; 1.267/2.269/fora; 1.316/21.712/fora; 1.316/1.338/fora; 1.459/15.098/fora; 1.563/15.939/fora; 1.888/32.839/fora; 2.006/13.717/fora; 2.107/13.146/fora; 2.283/2.283/fora; 2.734/19.706/fora; 2.969/32.532/fora; 3.034/2.617/fora; 3.289/2.743/fora; 4.291/6.660/fora
+
+tempo 1371s

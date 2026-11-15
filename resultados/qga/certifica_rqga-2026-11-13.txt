@@ -1,0 +1,27 @@
+RQGA e MaxCut-QGA no motor exato esparso | semente 20261111 | 2026-11-13
+RQGA-coloracao n=3 |E|=3 iter=1 | qubits=25 | portas=678 | k=16 | suporte max=4096 | bits=5 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.543945 | 0.1s
+RQGA-coloracao n=3 |E|=3 iter=2 | qubits=25 | portas=763 | k=21 | suporte max=4096 | bits=8 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.548431 | 3.1s
+RQGA-coloracao n=3 |E|=3 iter=3 | qubits=25 | portas=848 | k=28 | suporte max=8192 | bits=11 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.516296 | 0.3s
+RQGA-coloracao n=3 |E|=3 iter=4 | qubits=25 | portas=933 | k=33 | suporte max=8192 | bits=13 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.519007 | 0.4s
+RQGA-coloracao n=3 |E|=3 | marginal da aptidao muda de iter=1 para iter=4: True
+RQGA-coloracao n=4 |E|=4 iter=1 | qubits=27 | portas=3041 | k=18 | suporte max=16384 | bits=5 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.642822 | 0.3s
+RQGA-coloracao n=4 |E|=4 iter=2 | qubits=27 | portas=3127 | k=23 | suporte max=16384 | bits=8 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.648109 | 0.6s
+RQGA-coloracao n=4 |E|=4 iter=3 | qubits=27 | portas=3213 | k=28 | suporte max=32768 | bits=10 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.608370 | 1.2s
+RQGA-coloracao n=4 |E|=4 iter=4 | qubits=27 | portas=3299 | k=33 | suporte max=32768 | bits=12 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.609857 | 1.8s
+RQGA-coloracao n=4 |E|=4 | marginal da aptidao muda de iter=1 para iter=4: True
+MaxCut-QGA n=4 |E|=4 iter=1 | qubits=23 | portas=187 | k=14 | suporte max=1024 | bits=5 | ind (N=4) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.353516 | 0.0s
+MaxCut-QGA n=4 |E|=4 iter=2 | qubits=23 | portas=273 | k=19 | suporte max=1024 | bits=7 | ind (N=4) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.353088 | 0.0s
+MaxCut-QGA n=4 |E|=4 iter=3 | qubits=23 | portas=359 | k=24 | suporte max=1568 | bits=10 | ind (N=4) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.333879 | 0.1s
+MaxCut-QGA n=4 |E|=4 iter=4 | qubits=23 | portas=445 | k=29 | suporte max=2048 | bits=12 | ind (N=4) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.333993 | 0.1s
+MaxCut-QGA n=4 |E|=4 | marginal da aptidao muda de iter=1 para iter=4: True
+MaxCut-QGA n=6 |E|=7 iter=1 | qubits=25 | portas=623 | k=16 | suporte max=4096 | bits=5 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.294922 | 0.1s
+MaxCut-QGA n=6 |E|=7 iter=2 | qubits=25 | portas=707 | k=21 | suporte max=4096 | bits=7 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.294495 | 0.1s
+MaxCut-QGA n=6 |E|=7 iter=3 | qubits=25 | portas=791 | k=26 | suporte max=8192 | bits=10 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.280329 | 0.3s
+MaxCut-QGA n=6 |E|=7 iter=4 | qubits=25 | portas=875 | k=31 | suporte max=8192 | bits=12 | ind (N=6) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.280417 | 0.4s
+MaxCut-QGA n=6 |E|=7 | marginal da aptidao muda de iter=1 para iter=4: True
+MaxCut-QGA n=8 |E|=10 iter=1 | qubits=27 | portas=2780 | k=18 | suporte max=16384 | bits=5 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.243652 | 0.3s
+MaxCut-QGA n=8 |E|=10 iter=2 | qubits=27 | portas=2865 | k=23 | suporte max=16384 | bits=7 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.243263 | 0.6s
+MaxCut-QGA n=8 |E|=10 iter=3 | qubits=27 | portas=2950 | k=30 | suporte max=32768 | bits=11 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.230019 | 1.2s
+MaxCut-QGA n=8 |E|=10 iter=4 | qubits=27 | portas=3035 | k=35 | suporte max=32768 | bits=13 | ind (N=8) exatamente uniforme=True | Parseval=True | aptidao: 32 valores, maior P=0.230379 | 1.9s
+MaxCut-QGA n=8 |E|=10 | marginal da aptidao muda de iter=1 para iter=4: True
+todos certificados: True

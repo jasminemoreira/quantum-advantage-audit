@@ -1,0 +1,18 @@
+Distancia ao centro: finais iguais ao gemeo x diferentes | semente 20261121 | 2026-11-14
+|P|=50, G=30, 100 AGs por dominio (mesmos de gemeo_aptidao.py); medianas
+
+dominio (-5.12, 5.12): iguais 61, diferentes 39
+  f(E[x]): diferentes 1.480 | iguais 2.014 | Mann-Whitney p = 0.029
+  distancia de E[x] ao centro: diferentes 0.954 | iguais 0.984 | Mann-Whitney p = 0.066
+  distancia de E[x] ao otimo (origem): diferentes 0.954 | iguais 0.984 | Mann-Whitney p = 0.066
+  entropia H (bits): diferentes 8.000 | iguais 6.000 | Mann-Whitney p = 0.214
+  Spearman(distancia ao centro, f) em todos os 100: +0.64
+
+dominio (-2.12, 8.12): iguais 76, diferentes 24
+  f(E[x]): diferentes 1.316 | iguais 1.234 | Mann-Whitney p = 0.753
+  distancia de E[x] ao centro: diferentes 4.226 | iguais 4.203 | Mann-Whitney p = 0.799
+  distancia de E[x] ao otimo (origem): diferentes 0.923 | iguais 0.972 | Mann-Whitney p = 0.298
+  entropia H (bits): diferentes 3.000 | iguais 3.500 | Mann-Whitney p = 0.699
+  Spearman(distancia ao centro, f) em todos os 100: -0.11
+
+tempo 1400s

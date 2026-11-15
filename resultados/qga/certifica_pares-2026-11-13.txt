@@ -1,0 +1,4 @@
+Reducao do emaranhamento entre individuos, conferida no anel | semente 20261114 | 2026-11-13
+individuos de 1 registro (n=8), par de 16 qubits, G_qu com operadores da v1, 30 pares por modo
+max: marginal de A == previsao exata em 30/30 | k max 16 | suporte max 65536 | controle (previsao sem emaranhamento falha) em 28/30
+bell: marginal de A == previsao exata em 30/30 | k max 14 | suporte max 16384 | controle (previsao sem emaranhamento falha) em 30/30

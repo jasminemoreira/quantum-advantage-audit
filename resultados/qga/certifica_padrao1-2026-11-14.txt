@@ -1,0 +1,34 @@
+Certificado estrutural do padrao 1 (amostragem classica) | semente 20261119 | 2026-11-14
+circuitos conferidos em 14/11 contra Ballinas 2022 Fig. 2, Ballinas 2024 Fig. 4 e texto, EAQGA v1 Alg. 1, Gamberi v1 Alg. 3, Saini Figs. 3 e 5; conferencia: TV(amostrador, statevector) com angulos sorteados
+
+Ballinas 2022 (Fig. 2): classifica como amostragem classica = [True] (esperado True) | TV max 1.5e-15 em 60 circuitos | OK
+   prefixo exato 11 portas, produto; prefixo exato 17 portas, produto; prefixo exato 26 portas, produto
+Ballinas 2024 (Fig. 4, sem X): classifica como amostragem classica = [True] (esperado True) | TV max 1.6e-15 em 60 circuitos | OK
+   prefixo exato 10 portas, produto; prefixo exato 16 portas, produto; prefixo exato 25 portas, produto
+Ballinas 2024 (texto: X na ancila): classifica como amostragem classica = [True] (esperado True) | TV max 1.6e-15 em 60 circuitos | OK
+   prefixo exato 11 portas, produto; prefixo exato 17 portas, produto; prefixo exato 26 portas, produto
+Ballinas 2024 (texto: ancila controla): classifica como amostragem classica = [True] (esperado True) | TV max 1.6e-15 em 60 circuitos | OK
+   prefixo exato 11 portas, produto; prefixo exato 17 portas, produto; prefixo exato 26 portas, produto
+EAQGA, estrela (texto): classifica como amostragem classica = [True] (esperado True) | TV max 1.8e-16 em 60 circuitos | OK
+   prefixo exato 0 portas, produto
+EAQGA, cadeia (pseudocodigo): classifica como amostragem classica = [True] (esperado True) | TV max 2.3e-16 em 60 circuitos | OK
+   prefixo exato 0 portas, produto
+Gamberi 2026 (Algorithm 3): classifica como amostragem classica = [True] (esperado True) | TV max 1.7e-15 em 60 circuitos | OK
+   prefixo exato 3 portas, produto; prefixo exato 5 portas, produto; prefixo exato 8 portas, produto
+Saini 2025 (Fig. 3): classifica como amostragem classica = [True] (esperado True) | TV max 2.5e-16 em 60 circuitos | OK
+   prefixo exato 0 portas, produto
+controle: R2 com alvo em superposicao: classifica como amostragem classica = [False] (esperado False) | sem amostrador | OK
+   porta nao monomial ry num qubit acoplado sem copia (porta 3)
+controle: R2 com testemunha mexida: classifica como amostragem classica = [False] (esperado False) | sem amostrador | OK
+   porta ry numa testemunha ja usada (porta 3)
+controle: H-CNOT-H: classifica como amostragem classica = [False] (esperado False) | sem amostrador | OK
+   estado apos o prefixo exato (3 portas) nao e produto
+controle: camada QAOA: classifica como amostragem classica = [False] (esperado False) | sem amostrador | OK
+   porta nao monomial rx num qubit acoplado sem copia (porta 15); porta nao monomial rx num qubit acoplado sem copia (porta 5); porta nao monomial rx num qubit acoplado sem copia (porta 9)
+controle: Bell no prefixo: classifica como amostragem classica = [False] (esperado False) | sem amostrador | OK
+   estado apos o prefixo exato (2 portas) nao e produto
+
+EAQGA com 100 qubits: amostragem classica = True (prefixo exato 0 portas, produto; 277 portas depois; 100 qubits acoplados; regra R2 usada 32 vezes) | 0.00s
+Ballinas com 16 qubits de dados: amostragem classica = True (prefixo exato 50 portas, produto; 33 portas depois; 0 qubits acoplados; regra R2 usada 0 vezes) | 0.88s
+
+todos conforme o esperado: True
