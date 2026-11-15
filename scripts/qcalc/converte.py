@@ -1,5 +1,5 @@
-"""Conversão de circuitos Qiskit para as portas do motor exato (extraída de mede_kmin_mqt.py,
-repositório da tese, 13/11/2026; o corpo das funções é idêntico ao usado nos resultados)."""
+"""Conversion of Qiskit circuits into the gates of the exact engine (extracted from mede_kmin_mqt.py,
+thesis repository, 13 Nov 2026; the function bodies are identical to the ones used for the results)."""
 import math
 
 FASE = {"z": 8, "s": 4, "sdg": 12, "t": 2, "tdg": 14}
@@ -15,10 +15,10 @@ MCX_NOMES = {"ccx", "mcx", "mcx_gray", "mcx_recursive", "mcx_vchain", "c3x", "c4
 
 
 def converte(qc, rota_exata=True):
-    """QuantumCircuit -> lista de portas do motor; None se houver fase fora de pi/8.
+    """QuantumCircuit -> list of engine gates; None if there is a phase that is not a multiple of pi/8.
 
-    Desce recursivamente nas definicoes das portas compostas. Na rota exata, MCX (qualquer
-    variante) e MCPhase com angulo multiplo de pi/8 sao mantidas inteiras.
+    Recursively descends into the definitions of composite gates. On the exact route, MCX (any
+    variant) and MCPhase with an angle that is a multiple of pi/8 are kept whole.
     """
     out = []
 
@@ -49,12 +49,12 @@ def converte(qc, rota_exata=True):
             elif rota_exata and nm in ("p", "cp", "mcphase", "mcp", "u1", "cu1", "rz") and nm != "rz":
                 m = angulo_pi8(float(op.params[0]))
                 if m is None:
-                    raise ValueError("fase fora de pi/8")
+                    raise ValueError("phase not a multiple of pi/8")
                 out.append(("fase", m, qs if nm != "p" and nm != "u1" else [qs[0]]))
             elif op.definition is not None:
                 anda(op.definition, qs)
             else:
-                raise ValueError(f"porta sem definicao: {nm}")
+                raise ValueError(f"gate without definition: {nm}")
 
     try:
         anda(qc, list(range(qc.num_qubits)))

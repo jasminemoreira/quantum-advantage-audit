@@ -1,13 +1,15 @@
-"""Hipotese: os finais que diferem do gemeo sao melhores no centrado por estarem mais perto do centro.
+"""Hypothesis: the final individuals that differ from the analog are better on the centered domain
+because they are closer to the center.
 
-Mesmos AGs de gemeo_aptidao.py (mesmas sementes, 100 por dominio). Para cada melhor final:
-igual (decidido no anel), fq = f(E[x]) quantica exata, distancia de E[x] ao centro do dominio,
-distancia de E[x] ao otimo (origem), entropia H da saida em bits.
-Previsao (vies de centro): no centrado, os diferentes tem E[x] mais perto do centro (= otimo) e
-entropia maior; no deslocado, se ficarem mais perto do centro, isso nao os aproxima do otimo.
+Same GAs as gemeo_aptidao.py (same seeds, 100 per domain). For each best final individual:
+igual (decided in the ring), fq = exact quantum f(E[x]), distance from E[x] to the domain center,
+distance from E[x] to the optimum (origin), entropy H of the output in bits.
+Prediction (center bias): on the centered domain, the different ones have E[x] closer to the center
+(= optimum) and higher entropy; on the shifted domain, if they lie closer to the center, this does
+not bring them closer to the optimum.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_centro.py
-Saida: resultados/qga/gemeo_centro-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_centro.py
+Output: resultados/qga/gemeo_centro-<date>.txt
 """
 from __future__ import annotations
 
@@ -50,7 +52,7 @@ def tarefa(args):
 
 def compara(nome, a, b):
     u = mannwhitneyu(a, b, alternative="two-sided")
-    return f"  {nome}: diferentes {np.median(a):.3f} | iguais {np.median(b):.3f} | Mann-Whitney p = {u.pvalue:.3f}"
+    return f"  {nome}: different {np.median(a):.3f} | equal {np.median(b):.3f} | Mann-Whitney p = {u.pvalue:.3f}"
 
 
 def main():
@@ -58,23 +60,23 @@ def main():
     tarefas = [(d, GE.SEMENTE + 1000 * k + r) for k, d in enumerate(GE.DOMINIOS) for r in range(REPS)]
     with Pool(16) as pool:
         rs = pool.map(tarefa, tarefas, chunksize=1)
-    L = [f"Distancia ao centro: finais iguais ao gemeo x diferentes | semente {GE.SEMENTE} | {date.today()}",
-         f"|P|=50, G=30, {REPS} AGs por dominio (mesmos de gemeo_aptidao.py); medianas", ""]
+    L = [f"Distance to the center: final individuals equal to the analog x different | seed {GE.SEMENTE} | {date.today()}",
+         f"|P|=50, G=30, {REPS} GAs per domain (same as gemeo_aptidao.py); medians", ""]
     for d in GE.DOMINIOS:
         sub = [r for r in rs if r[0] == d]
         dif = [r for r in sub if not r[1]]
         ig = [r for r in sub if r[1]]
         col = lambda rr, i: np.array([r[i] for r in rr])  # noqa: E731
-        L.append(f"dominio {d}: iguais {len(ig)}, diferentes {len(dif)}")
+        L.append(f"domain {d}: equal {len(ig)}, different {len(dif)}")
         L.append(compara("f(E[x])", col(dif, 2), col(ig, 2)))
-        L.append(compara("distancia de E[x] ao centro", col(dif, 3), col(ig, 3)))
-        L.append(compara("distancia de E[x] ao otimo (origem)", col(dif, 4), col(ig, 4)))
-        L.append(compara("entropia H (bits)", col(dif, 5), col(ig, 5)))
+        L.append(compara("distance from E[x] to the center", col(dif, 3), col(ig, 3)))
+        L.append(compara("distance from E[x] to the optimum (origin)", col(dif, 4), col(ig, 4)))
+        L.append(compara("entropy H (bits)", col(dif, 5), col(ig, 5)))
         todos = sub
-        L.append(f"  Spearman(distancia ao centro, f) em todos os {len(todos)}: "
+        L.append(f"  Spearman(distance to the center, f) over all {len(todos)}: "
                  f"{spearmanr(col(todos, 3), col(todos, 2)).statistic:+.2f}")
         L.append("")
-    L.append(f"tempo {time.time() - t0:.0f}s")
+    L.append(f"time {time.time() - t0:.0f}s")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"gemeo_centro-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0

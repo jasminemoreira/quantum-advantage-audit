@@ -1,8 +1,8 @@
-"""Ablacao do caso Souza, Dardenne e Portugal pelo protocolo fixado em
-resultados/qga/ablacao_protocolo-2026-11-14.md (14/11/2026).
+"""Ablation of the Souza, Dardenne and Portugal case under the protocol fixed in
+resultados/qga/ablacao_protocolo-2026-11-14.md (14 Nov 2026).
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/ablacao_souza.py [--reps N]
-Saidas: resultados/qga/ablacao_souza-<data>.txt (relatorio) e .npz (curvas).
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/ablacao_souza.py [--reps N]
+Outputs: resultados/qga/ablacao_souza-<date>.txt (report) and .npz (curves).
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def tarefa(args):
 
 
 def welch(a, b):
-    """diferenca de medias (a - b), erro-padrao e graus de liberdade de Welch."""
+    """difference of means (a - b), standard error and Welch degrees of freedom."""
     va, vb = a.var(ddof=1) / len(a), b.var(ddof=1) / len(b)
     se = np.sqrt(va + vb)
     gl = (va + vb) ** 2 / (va ** 2 / (len(a) - 1) + vb ** 2 / (len(b) - 1)) if se > 0 else len(a) + len(b) - 2
@@ -54,13 +54,13 @@ def tost(a, b):
     d, se, gl = welch(a, b)
     if se == 0:
         return d, se, 0.0 if abs(d) < MARGEM else 1.0
-    p1 = 1 - stats.t.cdf((d + MARGEM) / se, gl)   # H0: d <= -margem
-    p2 = stats.t.cdf((d - MARGEM) / se, gl)       # H0: d >= +margem
+    p1 = 1 - stats.t.cdf((d + MARGEM) / se, gl)   # H0: d <= -margin
+    p2 = stats.t.cdf((d - MARGEM) / se, gl)       # H0: d >= +margin
     return d, se, max(p1, p2)
 
 
 def superior(a, b):
-    """p unilateral de 'a melhor que b' (log f menor)."""
+    """one-sided p of 'a better than b' (smaller log f)."""
     d, se, gl = welch(a, b)
     if se == 0:
         return 0.0 if d < 0 else 1.0
@@ -98,11 +98,11 @@ def main():
     np.savez_compressed(RAIZ / "resultados" / "qga" / f"ablacao_souza-{date.today()}.npz",
                         **{f"{f}|{a}|{m}": v for (f, a, m), v in cur.items()})
 
-    L = [f"Ablacao Souza (protocolo ablacao_protocolo-2026-11-14.md) | semente {SEMENTE} | reps {reps} | {date.today()}",
-         "medida: log(f + 1e-9) do melhor f avaliado; diferencas = media(log) A - B; negativo = A melhor",
-         f"margem de equivalencia +-{MARGEM:.4f} (razao de medias geometricas 0,80 a 1,25)", ""]
+    L = [f"Souza ablation (protocol ablacao_protocolo-2026-11-14.md) | seed {SEMENTE} | reps {reps} | {date.today()}",
+         "measure: log(f + 1e-9) of the best evaluated f; differences = mean(log) A - B; negative = A better",
+         f"equivalence margin +-{MARGEM:.4f} (ratio of geometric means 0.80 to 1.25)", ""]
     # H_A1
-    L.append("H_A1 (g0): quantico - classico; previsto < 0 no centrado e >= 0 nos deslocados")
+    L.append("H_A1 (g0): quantum - classical; predicted < 0 on the centered domain and >= 0 on the shifted ones")
     a1 = []
     for func, W in FUNCS:
         partes = []
@@ -110,11 +110,11 @@ def main():
             d, se, _ = welch(cur[(func, alfa, "quantico")][:, 0], cur[(func, alfa, "classico")][:, 0])
             ok = (d + 1.96 * se < 0) if alfa == 0.5 else (d + 1.96 * se >= 0)
             a1.append(ok)
-            partes.append(f"a={alfa}: {d:+.3f} [{d - 1.96 * se:+.3f}, {d + 1.96 * se:+.3f}] {'ok' if ok else 'NAO'}")
+            partes.append(f"a={alfa}: {d:+.3f} [{d - 1.96 * se:+.3f}, {d + 1.96 * se:+.3f}] {'ok' if ok else 'NO'}")
         L.append(f"  {func:10s} " + " | ".join(partes))
-    L.append(f"  H_A1 vale em {sum(a1)} de {len(a1)} celulas")
+    L.append(f"  H_A1 holds in {sum(a1)} of {len(a1)} cells")
     L.append("")
-    # H_A2 e H_A3
+    # H_A2 and H_A3
     for rival in ("classico", "gemeo"):
         ps, celulas = [], []
         for func, W in FUNCS:
@@ -123,25 +123,25 @@ def main():
                 ps.append(superior(a, b))
                 celulas.append((func, alfa, a, b))
         rej = holm(ps)
-        L.append(f"H_A2 (g30, deslocados): quantico superior a {rival}? (Holm, familia de {len(ps)})")
-        L.append(f"  pares com superioridade do quantico: {int(rej.sum())} de {len(ps)}"
+        L.append(f"H_A2 (g30, shifted): quantum superior to {rival}? (Holm, family of {len(ps)})")
+        L.append(f"  pairs with quantum superiority: {int(rej.sum())} of {len(ps)}"
                  + ("" if not rej.any() else " -> " + ", ".join(f"{c[0]} a={c[1]}" for c, r in zip(celulas, rej) if r)))
-        L.append(f"H_A3 (g30, deslocados): equivalencia quantico x {rival} (TOST, margem 0,80-1,25)")
+        L.append(f"H_A3 (g30, shifted): equivalence quantum x {rival} (TOST, margin 0.80-1.25)")
         neq = 0
         for (func, alfa, a, b), p in zip(celulas, ps):
             d, se, pt = tost(a, b)
             eq = pt < 0.05
             neq += eq
             L.append(f"  {func:10s} a={alfa}: d={d:+.3f} IC90 [{d - 1.645 * se:+.3f}, {d + 1.645 * se:+.3f}] "
-                     f"TOST p={pt:.3f} {'EQUIVALENTE' if eq else 'inconclusivo'} | p(sup)={p:.3f}")
-        L.append(f"  equivalencia demonstrada em {neq} de {len(celulas)} pares")
+                     f"TOST p={pt:.3f} {'EQUIVALENT' if eq else 'inconclusive'} | p(sup)={p:.3f}")
+        L.append(f"  equivalence demonstrated in {neq} of {len(celulas)} pairs")
         L.append("")
-    # centrado e curvas (sem previsao)
-    L.append("Sem previsao: g30 no centrado e onde o analogo fica atras do quantico (qualquer geracao, > 2 EP)")
+    # centered domain and curves (no prediction)
+    L.append("No prediction: g30 on the centered domain and where the analog lags behind the quantum (any generation, > 2 SE)")
     for func, W in FUNCS:
         a, b = cur[(func, 0.5, "quantico")][:, GER], cur[(func, 0.5, "classico")][:, GER]
         d, se, _ = welch(a, b)
-        L.append(f"  {func:10s} centrado g30 quantico - classico: {d:+.3f} (EP {se:.3f})")
+        L.append(f"  {func:10s} centered g30 quantum - classical: {d:+.3f} (SE {se:.3f})")
     atras = []
     for func, W in FUNCS:
         for alfa in ALFAS:
@@ -149,10 +149,10 @@ def main():
             for gen in range(GER + 1):
                 d, se, _ = welch(g[:, gen], q[:, gen])
                 if d > 2 * se:
-                    atras.append(f"{func} a={alfa} g{gen} ({d:+.2f}, EP {se:.2f})")
-    L.append(f"  analogo atras do quantico (> 2 EP) em {len(atras)} celulas (funcao, dominio, geracao) de {len(FUNCS) * len(ALFAS) * (GER + 1)}")
+                    atras.append(f"{func} a={alfa} g{gen} ({d:+.2f}, SE {se:.2f})")
+    L.append(f"  analog behind the quantum (> 2 SE) in {len(atras)} cells (function, domain, generation) of {len(FUNCS) * len(ALFAS) * (GER + 1)}")
     L += ["    " + x for x in atras[:60]]
-    L.append(f"\ntempo {time.time() - t0:.0f}s")
+    L.append(f"\ntime {time.time() - t0:.0f}s")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"ablacao_souza-{date.today()}.txt").write_text("\n".join(L) + "\n")
 

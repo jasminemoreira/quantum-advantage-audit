@@ -1,16 +1,16 @@
-"""Certificado exato (anel Z[zeta_16]) do exemplo resolvido de Udrescu, Prodan e Vladutiu 2006 (14/11/2026).
+"""Exact certificate (ring Z[zeta_16]) of the worked example of Udrescu, Prodan and Vladutiu 2006 (14 Nov 2026).
 
-Mesmo exemplo de rqga2006_exemplo.py, agora como circuito de portas no motor exato esparso:
-  - 4 qubits de individuo (q0..q3, u = sum bit_i 2^i) e 10 de aptidao (q4..q13, valor y = sum bit_j 2^j);
-  - preparo: H nos individuos; para cada u, MCX controlados pelo padrao de u escrevem f(u) (Eq. 16);
-  - oraculo: fase -1 (zeta^8) nos dois valores de aptidao marcados (sinal negativo na Eq. 16);
-  - difusor so no registro de aptidao: H^10 X^10 CZ_10 X^10 H^10 (= -D, sinal global irrelevante).
-Para k = 0..12 iteracoes: decide EXATAMENTE que a marginal dos individuos e 1/16 para cada u e
-calcula EXATAMENTE P(aptidao marcada) (numerador em Z[zeta_16] / 2^k), comparando com o float e com
-a cota do Lema 2.
+Same example as rqga2006_exemplo.py, now as a gate circuit on the exact sparse engine:
+  - 4 individual qubits (q0..q3, u = sum bit_i 2^i) and 10 fitness qubits (q4..q13, value y = sum bit_j 2^j);
+  - preparation: H on the individuals; for each u, MCX gates controlled by the bit pattern of u write f(u) (Eq. 16);
+  - oracle: phase -1 (zeta^8) on the two marked fitness values (negative sign in Eq. 16);
+  - diffuser on the fitness register only: H^10 X^10 CZ_10 X^10 H^10 (= -D, global sign irrelevant).
+For k = 0..12 iterations: decides EXACTLY that the marginal of the individuals is 1/16 for each u and
+computes EXACTLY P(marked fitness) (numerator in Z[zeta_16] / 2^k), comparing it with the float value and
+with the bound of Lemma 2.
 
-Uso (WSL): externos/mqtbench/.venv/bin/python scripts/qga/rqga2006_exato.py
-Saida: resultados/qga/rqga2006_exato-<data>.txt
+Usage (WSL): externos/mqtbench/.venv/bin/python scripts/qga/rqga2006_exato.py
+Output: resultados/qga/rqga2006_exato-<data>.txt
 """
 from __future__ import annotations
 
@@ -29,8 +29,8 @@ F = ["1000000000", "1000011110", "1000110010", "1001010000", "1001100100", "1010
      "1010110100", "1000101000", "1001000110", "1001011010", "0110011011", "0110101111", "0111001101",
      "0111100001", "0111111111"]
 FV = [int(b, 2) for b in F]
-# exemplo 2 (Eqs. 15-17): marcados os individuos 6 e 7; exemplo 1 (Eqs. 12-14): 4, 5, 6, 7 e 10
-# (sinais negativos na Eq. 13; os valores de aptidao das Eqs. 13 e 16 sao os mesmos).
+# example 2 (Eqs. 15-17): individuals 6 and 7 marked; example 1 (Eqs. 12-14): 4, 5, 6, 7 and 10
+# (negative signs in Eq. 13; the fitness values of Eqs. 13 and 16 are the same).
 EXEMPLO = int(sys.argv[sys.argv.index("--exemplo") + 1]) if "--exemplo" in sys.argv else 2
 MARC = [FV[u] for u in ((4, 5, 6, 7, 10) if EXEMPLO == 1 else (6, 7))]
 IND = list(range(4))
@@ -38,7 +38,7 @@ FIT = list(range(4, 14))
 
 
 def padrao(m, qubits, valor, acao):
-    """Aplica X nos qubits cujo bit em `valor` e 0, executa acao(), desfaz os X."""
+    """Applies X to the qubits whose bit in `valor` is 0, runs acao(), undoes the X gates."""
     zeros = [q for i, q in enumerate(qubits) if not (valor >> i) & 1]
     for q in zeros:
         m.aplica(("mcx", [], q))
@@ -72,16 +72,16 @@ def main():
         for j in range(10):
             if (fu >> j) & 1:
                 padrao(m, IND, u, lambda j=j: m.aplica(("mcx", IND, FIT[j])))
-    oraculo(m)  # estado da Eq. 16
+    oraculo(m)  # state of Eq. 16
     N, nm = 1024, len(MARC)
-    L = [f"Exemplo de Udrescu et al. 2006 no motor exato Z[zeta_16] | exemplo {EXEMPLO} (marcados: {len(MARC)}) | {date.today()}",
-         "k | marginal dos individuos exatamente 1/16? | P(aptidao marcada) exata (decimal) | cota do Lema 2 | P exata como numerador / 2^k"]
+    L = [f"Example of Udrescu et al. 2006 on the exact engine Z[zeta_16] | example {EXEMPLO} (marked: {len(MARC)}) | {date.today()}",
+         "k | marginal of the individuals exactly 1/16? | exact P(marked fitness) (decimal) | bound of Lemma 2 | exact P as numerator / 2^k"]
     p0 = None
     tudo = True
     for k in range(0, 13):
         if k:
             difusor(m)
-            oraculo(m)  # iteracao seguinte: difusor, depois oraculo (G = D O aplicado a partir de O|psi0>)
+            oraculo(m)  # next iteration: diffuser, then oracle (G = D O applied starting from O|psi0>)
         marg = m.marginal(IND)
         alvo = (2 ** m.k,) + (0,) * 7
         unif = len(marg) == 16 and all(tuple(16 * a for a in v) == alvo for v in marg.values())
@@ -96,9 +96,9 @@ def main():
             pexato0 = Fraction(num[0], 2 ** m.k) if not any(num[1:]) else None
         cota = p0 + (1 - p0) / (N - nm)
         tudo &= unif and pm <= cota + 1e-12
-        L.append(f"{k:2d} | {unif} | {pm:.6f} | {cota:.6f} | numerador {tuple(num)} / 2^{m.k}")
-    L.append(f"\nP_0(M) exato = {pexato0}; marginal dos individuos uniforme e cota respeitada em todo k: {tudo}")
-    L.append(f"suporte maximo {m.max_suporte}")
+        L.append(f"{k:2d} | {unif} | {pm:.6f} | {cota:.6f} | numerator {tuple(num)} / 2^{m.k}")
+    L.append(f"\nexact P_0(M) = {pexato0}; marginal of the individuals uniform and bound respected for every k: {tudo}")
+    L.append(f"maximum support {m.max_suporte}")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / (f"rqga2006_exato-{date.today()}.txt" if EXEMPLO == 2 else f"rqga2006_exato_ex1-{date.today()}.txt")).write_text("\n".join(L) + "\n")
 

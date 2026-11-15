@@ -1,20 +1,20 @@
-"""Motor exato esparso em Z[zeta_16] (13/11/2026).
+"""Exact sparse engine over Z[zeta_16] (13 Nov 2026).
 
-Mesmo esquema da nota de largura inteira (amplitude u_x/sqrt(2)^k, u_x com 8 inteiros, k
-global, reducao por paridade), mas guarda so as amplitudes nao nulas num dicionario
-indice -> tupla de 8 inteiros do Python (precisao arbitraria). Serve para circuitos grandes em
-qubits e pequenos em suporte, como os RQGA (23 a 27 qubits, a maioria ancilas em |0>).
+Same scheme as the integer-width note (amplitude u_x/sqrt(2)^k, u_x made of 8 integers, global
+k, reduction by parity), but it stores only the nonzero amplitudes in a dictionary
+index -> tuple of 8 Python integers (arbitrary precision). It is meant for circuits that are large
+in qubits and small in support, such as the RQGA ones (23 to 27 qubits, most of them ancillas in |0>).
 
-Inclui o produto exato no anel, a conjugacao e as probabilidades marginais exatas:
-P(y) = (soma de u_x * conj(u_x) sobre x com projecao y) / 2^k, devolvida como (numerador em
-Z[zeta], k). A probabilidade e real, entao o numerador fica no subanel real; para um teste de
-igualdade com um racional r = a/2^b basta comparar 2^b * numerador com a * 2^k * (1,0,...,0).
+It includes the exact product in the ring, conjugation and exact marginal probabilities:
+P(y) = (sum of u_x * conj(u_x) over x with projection y) / 2^k, returned as (numerator in
+Z[zeta], k). The probability is real, so the numerator lies in the real subring; to test
+equality with a rational r = a/2^b it suffices to compare 2^b * numerator with a * 2^k * (1,0,...,0).
 """
 from __future__ import annotations
 
 
 def zeta_m(u, m):
-    """u (tupla de 8 ints) vezes zeta^m."""
+    """u (tuple of 8 ints) times zeta^m."""
     m %= 16
     neg = m >= 8
     m %= 8
@@ -23,7 +23,7 @@ def zeta_m(u, m):
 
 
 def mult(u, v):
-    """Produto em Z[zeta_16] = Z[x]/(x^8+1)."""
+    """Product in Z[zeta_16] = Z[x]/(x^8+1)."""
     r = [0] * 8
     for i, a in enumerate(u):
         if a:
@@ -38,7 +38,7 @@ def mult(u, v):
 
 
 def conj(u):
-    """conj(zeta^j) = zeta^(16-j) = -zeta^(8-j) para j>=1."""
+    """conj(zeta^j) = zeta^(16-j) = -zeta^(8-j) for j>=1."""
     return (u[0],) + tuple(-u[8 - j] for j in range(1, 8))
 
 
@@ -104,7 +104,7 @@ class MotorEsparso:
         return sum(a * a for u in self.s.values() for a in u)
 
     def marginal(self, qubits):
-        """Numeradores exatos {y: soma u conj(u)} na projecao sobre `qubits` (ordem dada)."""
+        """Exact numerators {y: sum u conj(u)} in the projection onto `qubits` (in the given order)."""
         out = {}
         for x, u in self.s.items():
             y = 0

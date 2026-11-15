@@ -1,15 +1,15 @@
-"""Decisao EXATA de 'gemeo classico = circuito quantico', individuo a individuo (14/11/2026).
+"""EXACT decision of 'classical analog = quantum circuit', individual by individual (14 Nov 2026).
 
-Mesmos individuos de gemeo_exato.py (mesma semente: 300 iniciais sorteados e os melhores finais de
-30 AGs por dominio). Para cada um:
-  - distribuicao quantica exata no motor esparso em Z[zeta_16]: P(x) = num(x) / 2^k;
-  - distribuicao exata do gemeo em racionais diadicos: P(x) = w(x) / 2^h, h = numero de H;
-  - igualdade decidida sem ponto flutuante: 2^h * num(x) == w(x) * 2^k * (1, 0, ..., 0) para todo x.
-Relata, por classe do corolario (corolario, so_T1, fora), quantos sao exatamente iguais e confere
-com a TV em ponto flutuante de gemeo_exato.py.
+Same individuals as gemeo_exato.py (same seed: 300 drawn initial individuals and the best final
+individuals of 30 GAs per domain). For each one:
+  - exact quantum distribution in the sparse engine over Z[zeta_16]: P(x) = num(x) / 2^k;
+  - exact distribution of the analog in dyadic rationals: P(x) = w(x) / 2^h, h = number of H gates;
+  - equality decided without floating point: 2^h * num(x) == w(x) * 2^k * (1, 0, ..., 0) for every x.
+Reports, per corollary class (corolario, so_T1, fora), how many are exactly equal and checks against
+the floating-point TV of gemeo_exato.py.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato_anel.py
-Saida: resultados/qga/gemeo_exato_anel-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato_anel.py
+Output: resultados/qga/gemeo_exato_anel-<date>.txt
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ IDX = np.arange(S.DIM)
 
 
 def gemeo_inteiro(ind):
-    """Pesos inteiros w(x) e expoente h com P_gemeo(x) = w(x) / 2^h."""
+    """Integer weights w(x) and exponent h with P_analog(x) = w(x) / 2^h."""
     w = np.zeros(S.DIM, dtype=object)
     w[ind["base"]] = 1
     h = 0
@@ -84,15 +84,15 @@ def final(args):
 
 
 def resumo(rot, rs):
-    L = [f"{rot}: {len(rs)} individuos | exatamente iguais ao gemeo: {sum(r[1] for r in rs)} "
+    L = [f"{rot}: {len(rs)} individuals | exactly equal to the analog: {sum(r[1] for r in rs)} "
          f"({sum(r[1] for r in rs) / len(rs):.0%})"]
     for c in ("corolario", "so_T1", "fora"):
         sub = [r for r in rs if r[0] == c]
         if sub:
             ig = sum(r[1] for r in sub)
             disc = sum((r[1] != (r[2] < 1e-12)) for r in sub)
-            L.append(f"  {c:9s}: {len(sub):4d} | iguais (exato) {ig:4d} ({ig / len(sub):.0%}) | "
-                     f"discordancias com TV<1e-12 do float: {disc}")
+            L.append(f"  {c:9s}: {len(sub):4d} | equal (exact) {ig:4d} ({ig / len(sub):.0%}) | "
+                     f"disagreements with float TV<1e-12: {disc}")
     return L
 
 
@@ -104,19 +104,19 @@ def main():
         r_ini = pool.map(decide, iniciais, chunksize=4)
         r_fin = pool.map(final, [(d, GE.SEMENTE + 1000 * k + r) for k, d in enumerate(GE.DOMINIOS)
                                  for r in range(GE.REPS)], chunksize=1)
-    L = [f"Gemeo = quantico decidido no anel Z[zeta_16] | semente {GE.SEMENTE} (a de gemeo_exato.py) | {date.today()}",
-         "igualdade exata das distribuicoes medidas completas (16 qubits); classes do Corolario 1", ""]
-    L += resumo("iniciais sorteados (G_qu, v1)", r_ini)
+    L = [f"Analog = quantum decided in the ring Z[zeta_16] | seed {GE.SEMENTE} (that of gemeo_exato.py) | {date.today()}",
+         "exact equality of the full measured distributions (16 qubits); classes of Corollary 1", ""]
+    L += resumo("drawn initial individuals (G_qu, v1)", r_ini)
     fins = []
     for d in GE.DOMINIOS:
         rs = [r for dd, r in r_fin if dd == d]
         fins += rs
-        L += resumo(f"melhores finais, |P|=50, G=30, dominio {d}", rs)
+        L += resumo(f"best final individuals, |P|=50, G=30, domain {d}", rs)
     ok_cor = all(r[1] for r in r_ini + fins if r[0] == "corolario")
     disc = sum((r[1] != (r[2] < 1e-12)) for r in r_ini + fins)
-    L.append(f"\nCorolario 1 confirmado no exato (todo 'corolario' igual): {ok_cor}")
-    L.append(f"discordancias entre o exato e o criterio float TV < 1e-12: {disc}")
-    L.append(f"tempo {time.time() - t0:.0f}s; maior tempo por individuo {max(r[3] for r in r_ini + fins):.1f}s")
+    L.append(f"\nCorollary 1 confirmed in exact arithmetic (every 'corolario' equal): {ok_cor}")
+    L.append(f"disagreements between the exact check and the float criterion TV < 1e-12: {disc}")
+    L.append(f"time {time.time() - t0:.0f}s; longest time per individual {max(r[3] for r in r_ini + fins):.1f}s")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"gemeo_exato_anel-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0

@@ -1,20 +1,20 @@
-"""Quando o gemeo classico e EXATAMENTE igual ao circuito quantico (14/11/2026).
+"""When the classical stochastic analog is EXACTLY equal to the quantum circuit (14 Nov 2026).
 
-Corolario do Teorema 1 (provas-2026-11-14.md): um individuo de Souza (estado inicial de base,
-camadas de G_qu) cujo circuito obedece as regras R0, R1, R2 e no qual toda porta H age num qubit que,
-naquele instante, esta num estado de base (fresco sem porta nao monomial desde o inicio, ou bit
-classico re-sorteado pela regra R2) tem a mesma distribuicao medida que o gemeo classico
-(H -> XOR com moeda justa, Y -> X, fases descartadas).
+Corollary of Theorem 1 (provas-2026-11-14.md): a Souza individual (computational-basis initial
+state, layers of G_qu) whose circuit obeys rules R0, R1, R2 and in which every H gate acts on a qubit
+that, at that moment, is in a basis state (fresh with no non-monomial gate since the start, or a
+classical bit re-drawn by rule R2) has the same measured distribution as the classical analog
+(H -> XOR with a fair coin, Y -> X, phases discarded).
 
-Classes de cada individuo:
-  corolario : obedece ao corolario -> previsao TV(gemeo, quantico) = 0;
-  so_T1     : obedece ao Teorema 1 (amostragem classica), mas alguma H age num qubit fresco ja em
-              superposicao -> o gemeo pode diferir;
-  fora      : nao obedece ao Teorema 1 (pode haver interferencia).
-Conferencia: distribuicao exata do gemeo (propagacao de probabilidades) contra p_quantico (statevector).
+Classes of each individual:
+  corolario : obeys the corollary -> prediction TV(analog, quantum) = 0;
+  so_T1     : obeys Theorem 1 (classical sampling), but some H acts on a fresh qubit already in
+              superposition -> the analog may differ;
+  fora      : does not obey Theorem 1 (interference may occur).
+Check: exact distribution of the analog (probability propagation) against p_quantico (statevector).
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato.py
-Saida: resultados/qga/gemeo_exato-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/gemeo_exato.py
+Output: resultados/qga/gemeo_exato-<date>.txt
 """
 from __future__ import annotations
 
@@ -40,9 +40,9 @@ PERM = {"cx", "ccx", "swap", "cswap"}
 
 
 def classe_individuo(ind):
-    """Aplica as regras do Teorema 1 (com R2 e trava da testemunha) mais a condicao do corolario."""
+    """Applies the rules of Theorem 1 (with R2 and the witness lock) plus the corollary condition."""
     n = S.NQ
-    estado = {q: "base" for q in range(n)}  # base | super (frescos) | classico
+    estado = {q: "base" for q in range(n)}  # base | super (fresh) | classico (classical)
     grupo = {q: {q} for q in range(n)}
     travado = set()
     corolario = True
@@ -63,7 +63,7 @@ def classe_individuo(ind):
                     estado[q] = "super"
                 elif estado[q] == "super":
                     corolario = False
-                else:  # classico: precisa de testemunha (R2)
+                else:  # classical: needs a witness (R2)
                     outros = grupo[q] - {q}
                     if not outros:
                         return "fora"
@@ -86,7 +86,7 @@ def classe_individuo(ind):
 
 
 def p_gemeo(ind):
-    """Distribuicao exata do gemeo classico."""
+    """Exact distribution of the classical analog."""
     p = np.zeros(S.DIM)
     p[ind["base"]] = 1.0
     for cam in S.sem_i(ind)["cams"]:
@@ -97,7 +97,7 @@ def p_gemeo(ind):
                 p = 0.5 * (p + p[IDX ^ (1 << qs[0])])
             elif nome in FLIP:
                 p = p[IDX ^ (1 << qs[0])]
-            else:  # permutacoes involutivas: p_novo = p o pi
+            else:  # involutive permutations: p_new = p o pi
                 b = lambda q: (IDX >> q) & 1  # noqa: E731
                 if nome == "cx":
                     pi = IDX ^ (b(qs[0]) << qs[1])
@@ -123,12 +123,12 @@ def final(args):
 
 
 def resumo(rot, rs):
-    linhas = [f"{rot}: {len(rs)} individuos"]
+    linhas = [f"{rot}: {len(rs)} individuals"]
     for c in ("corolario", "so_T1", "fora"):
         tvs = np.array([tv for k, tv in rs if k == c])
         if len(tvs):
             linhas.append(f"  {c:9s}: {len(tvs):4d} ({len(tvs) / len(rs):.0%}) | TV max {tvs.max():.1e} | "
-                          f"TV mediana {np.median(tvs):.1e} | TV > 1e-12 em {(tvs > 1e-12).mean():.0%}")
+                          f"TV median {np.median(tvs):.1e} | TV > 1e-12 in {(tvs > 1e-12).mean():.0%}")
     return linhas
 
 
@@ -138,13 +138,13 @@ def main():
     with Pool(16) as pool:
         r_ini = pool.map(analisa, iniciais, chunksize=10)
         r_fin = pool.map(final, [(d, SEMENTE + 1000 * k + r) for k, d in enumerate(DOMINIOS) for r in range(REPS)], chunksize=1)
-    L = [f"Gemeo classico exato (corolario do Teorema 1) | semente {SEMENTE} | {date.today()}",
-         "previsao: TV(gemeo, quantico) = 0 (ate arredondamento) em todo individuo da classe 'corolario'", ""]
-    L += resumo("iniciais sorteados (G_qu, v1)", r_ini)
+    L = [f"Exact classical analog (corollary of Theorem 1) | seed {SEMENTE} | {date.today()}",
+         "prediction: TV(analog, quantum) = 0 (up to rounding) in every individual of class 'corolario'", ""]
+    L += resumo("drawn initial individuals (G_qu, v1)", r_ini)
     for d in DOMINIOS:
-        L += resumo(f"melhores finais, |P|=50, G=30, dominio {d}", [r for dd, r in r_fin if dd == d])
+        L += resumo(f"best final individuals, |P|=50, G=30, domain {d}", [r for dd, r in r_fin if dd == d])
     ok = all(tv < 1e-12 for k, tv in r_ini + [r for _, r in r_fin] if k == "corolario")
-    L.append(f"\nprevisao confirmada (TV < 1e-12 em todo 'corolario'): {ok}")
+    L.append(f"\nprediction confirmed (TV < 1e-12 in every 'corolario'): {ok}")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"gemeo_exato-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0

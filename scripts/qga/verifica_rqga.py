@@ -1,21 +1,21 @@
-"""Artigo 3 (11/11/2026): a saida medida do RQGA e uniforme, qualquer que seja o numero de
-iteracoes de Grover.
+"""Article 3 (11 Nov 2026): the measured output of the RQGA is uniform, whatever the number of
+Grover iterations.
 
-Usa o codigo publico dos autores, sem reescrever os circuitos:
-  - Ardelean e Udrescu (PeerJ CS 2022), externos/rqga (commit a018d70), graph_coloring.ipynb:
-    as funcoes get_ufit_instruction, get_oracle_instruction e get_grover_iteration_subcircuit
-    sao extraidas do notebook e executadas como estao. Unicos ajustes de API: QuantumCircuit.mct
-    (removido no Qiskit 1.0) vira mcx, e o grafo e gerado com semente em vez de init_graph
-    (nx.to_numpy_matrix foi removido do networkx 3).
-  - Viana e de Paula Neto (arXiv 2501.01058), externos/maxcut-qga (commit 23533c4): a classe
-    FragmentedQGA e importada como esta (o modulo metis, usado so no pre-processamento, e
-    substituido por um modulo vazio).
-O circuito e montado com as mesmas linhas de run_algorithm() / FragmentedQGA.run(), e o Aer
-(statevector) devolve a distribuicao exata do registro medido (individuos) e, para contraste,
-a do registro de aptidao, que o Grover de fato altera.
+Uses the authors' public code, without rewriting the circuits:
+  - Ardelean and Udrescu (PeerJ CS 2022), externos/rqga (commit a018d70), graph_coloring.ipynb:
+    the functions get_ufit_instruction, get_oracle_instruction and get_grover_iteration_subcircuit
+    are extracted from the notebook and run as they are. The only API adjustments: QuantumCircuit.mct
+    (removed in Qiskit 1.0) becomes mcx, and the graph is generated with a seed instead of init_graph
+    (nx.to_numpy_matrix was removed in networkx 3).
+  - Viana and de Paula Neto (arXiv 2501.01058), externos/maxcut-qga (commit 23533c4): the class
+    FragmentedQGA is imported as it is (the metis module, used only in preprocessing, is
+    replaced by an empty module).
+The circuit is built with the same lines as run_algorithm() / FragmentedQGA.run(), and Aer
+(statevector) returns the exact distribution of the measured register (individuals) and, for contrast,
+that of the fitness register, which Grover does change.
 
-Uso (WSL): bash scripts/qga/rodar.sh
-Saida: resultados/qga/verifica_rqga-<data>.txt
+Usage (WSL): bash scripts/qga/rodar.sh
+Output: resultados/qga/verifica_rqga-<data>.txt
 """
 from __future__ import annotations
 
@@ -63,7 +63,7 @@ def amostra(qc, ind, shots, rng):
     return float(((obs - esp) ** 2 / esp).sum()), len(obs) - 1
 
 
-# ---------------- RQGA (Ardelean e Udrescu) ----------------
+# ---------------- RQGA (Ardelean and Udrescu) ----------------
 def carrega_rqga(n_nos, grafo):
     nb = json.loads((EXT / "rqga" / "graph_coloring.ipynb").read_text(encoding="utf-8"))
     celulas = ["".join(c["source"]) for c in nb["cells"] if c["cell_type"] == "code"]
@@ -81,7 +81,7 @@ def carrega_rqga(n_nos, grafo):
 
 
 def circuito_rqga(ns, iteracoes):
-    # Mesmas linhas de run_algorithm(), sem a medicao e sem o IBMQ.
+    # Same lines as run_algorithm(), without the measurement and without IBMQ.
     F = ns["NO_OF_QUBITS_FITNESS"]
     ind_qreg = QuantumRegister(ns["NO_OF_QUBITS_INDIVIDUAL"], "ireg")
     fit_qreg = QuantumRegister(F + 1, "freg")
@@ -104,7 +104,7 @@ def circuito_rqga(ns, iteracoes):
     return qc, ind_qreg, fit_qreg
 
 
-# ---------------- MaxCut QGA (Viana e de Paula Neto) ----------------
+# ---------------- MaxCut QGA (Viana and de Paula Neto) ----------------
 def carrega_maxcut():
     sys.modules.setdefault("metis", types.ModuleType("metis"))
     sys.path.insert(0, str(EXT / "maxcut-qga"))
@@ -114,7 +114,7 @@ def carrega_maxcut():
 
 
 def circuito_maxcut(q, to_binary, iteracoes):
-    # Mesmas linhas de FragmentedQGA.run(), sem a medicao.
+    # Same lines as FragmentedQGA.run(), without the measurement.
     q.weight_check()
     ind_qreg = QuantumRegister(q.individual_size, "ireg")
     fit_qreg = QuantumRegister(q.fitness_size + 1, "freg")
@@ -138,15 +138,15 @@ def circuito_maxcut(q, to_binary, iteracoes):
 
 def main():
     rng = np.random.default_rng(SEMENTE)
-    linhas = [f"RQGA e MaxCut-QGA: distribuicao do registro medido | semente {SEMENTE} | {date.today()}",
-              "caso iter qubits | max|p_ind - 2^-N| | TV(p_ind, uniforme) | TV(p_fit, p_fit[iter=1]) | "
-              "chi2/gl (8192 shots)"]
+    linhas = [f"RQGA and MaxCut-QGA: distribution of the measured register | seed {SEMENTE} | {date.today()}",
+              "case iter qubits | max|p_ind - 2^-N| | TV(p_ind, uniform) | TV(p_fit, p_fit[iter=1]) | "
+              "chi2/df (8192 shots)"]
     casos = []
     for n in (3, 4):
         g = nx.erdos_renyi_graph(n, 0.6, seed=int(rng.integers(2**31)))
         adj = nx.to_numpy_array(g, dtype=int).tolist()
         ns = carrega_rqga(n, adj)
-        casos.append((f"RQGA-coloracao n={n} |E|={g.number_of_edges()}",
+        casos.append((f"RQGA-coloring n={n} |E|={g.number_of_edges()}",
                       lambda it, ns=ns: circuito_rqga(ns, it)))
     Frag, to_binary = carrega_maxcut()
     for n in (4, 6, 8):

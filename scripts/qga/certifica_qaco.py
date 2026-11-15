@@ -1,19 +1,19 @@
-"""Padrao 1 no QACO da propria QMI (14/11/2026).
+"""Pattern 2 (product state) in the QACO published in QMI itself (14 Nov 2026).
 
-Caso: "Implementable hybrid quantum ant colony optimization algorithm", Quantum Machine Intelligence,
-2022, doi 10.1007/s42484-022-00065-1 (Secoes 3.1.1 e 3.1.2 lidas no site da Springer em 14/11).
-Circuito reconstruido do texto:
-  - qubits de formiga: RY(theta_i) a partir de |0> (feromonio), 0 < theta_i < pi;
-  - exploracao: qubit com RY(theta_e), theta_e = 2 arcsin(sqrt(beta_e)), controla uma porta e e
-    reiniciado (reset) depois de cada porta controlada; aqui o reset + novo RY e representado por um
-    qubit de exploracao novo para cada porta (os autores tambem "duplicam" esse qubit);
-  - sem restricao: CNOT(exploracao -> formiga) em cada formiga;
-  - com restricao (numero fixo de 1s): Fredkin(exploracao; t1, t2) em pares de formigas;
-  - mede as formigas.
-Previsao: classificado como amostragem classica (Teorema 1); amostrador = statevector.
+Case: "Implementable hybrid quantum ant colony optimization algorithm", Quantum Machine Intelligence,
+2022, doi 10.1007/s42484-022-00065-1 (Sections 3.1.1 and 3.1.2 read on the Springer site on 14 Nov).
+Circuit reconstructed from the text:
+  - ant qubits: RY(theta_i) from |0> (pheromone), 0 < theta_i < pi;
+  - exploration: a qubit with RY(theta_e), theta_e = 2 arcsin(sqrt(beta_e)), controls one gate and is
+    reset after each controlled gate; here the reset + new RY is represented by a new
+    exploration qubit for each gate (the authors also "duplicate" this qubit);
+  - unconstrained: CNOT(exploration -> ant) on each ant;
+  - constrained (fixed number of 1s): Fredkin(exploration; t1, t2) on pairs of ants;
+  - measures the ants.
+Prediction: classified as classical sampling (Theorem 1); sampler = statevector.
 
-Uso (WSL): externos/mqtbench/.venv/bin/python scripts/qga/certifica_qaco.py
-Saida: resultados/qga/certifica_qaco-<data>.txt
+Usage (WSL): externos/mqtbench/.venv/bin/python scripts/qga/certifica_qaco.py
+Output: resultados/qga/certifica_qaco-<data>.txt
 """
 import sys
 from datetime import date
@@ -52,7 +52,7 @@ def qaco(n, th, beta, restrito, rng):
 
 def main():
     rng = np.random.default_rng(SEMENTE)
-    L = [f"QACO (QMI 2022, doi 10.1007/s42484-022-00065-1) no verificador do padrao 1 | semente {SEMENTE} | {date.today()}"]
+    L = [f"QACO (QMI 2022, doi 10.1007/s42484-022-00065-1) on the checker of Pattern 2 (product state) | seed {SEMENTE} | {date.today()}"]
     tudo = True
     for restrito in (False, True):
         tvs, oks = [], set()
@@ -64,7 +64,7 @@ def main():
                 if ok:
                     sv = Statevector(qc.remove_final_measurements(inplace=False)).probabilities()
                     am = P1.amostrador(qc, plano)
-                    # marginal das formigas (qubits 0..n-1)
+                    # marginal of the ants (qubits 0..n-1)
                     nq = qc.num_qubits
                     msv = np.zeros(2 ** n)
                     mam = np.zeros(2 ** n)
@@ -73,9 +73,9 @@ def main():
                         mam[x & ((1 << n) - 1)] += am[x]
                     tvs.append(0.5 * np.abs(msv - mam).sum())
         tudo &= oks == {True} and max(tvs) < 1e-12
-        L.append(f"{'com restricao (Fredkin)' if restrito else 'sem restricao (CNOT)'}: amostragem classica = {sorted(oks)} | "
-                 f"TV max {max(tvs):.1e} em {len(tvs)} circuitos")
-    L.append(f"todos conforme o esperado: {tudo}")
+        L.append(f"{'constrained (Fredkin)' if restrito else 'unconstrained (CNOT)'}: classical sampling = {sorted(oks)} | "
+                 f"TV max {max(tvs):.1e} over {len(tvs)} circuits")
+    L.append(f"all as expected: {tudo}")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"certifica_qaco-{date.today()}.txt").write_text("\n".join(L) + "\n")
 

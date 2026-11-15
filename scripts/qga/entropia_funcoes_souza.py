@@ -1,22 +1,23 @@
-"""Entropia e outras funcoes de teste na reimplementacao de Souza/Dardenne/Portugal (14/11/2026).
+"""Entropy and other test functions in the reimplementation of Souza/Dardenne/Portugal (14 Nov 2026).
 
-Parte E (figuras de entropia do artigo): eles mostram que circuitos de maior entropia de Shannon
-na saida dao f menor no Rastrigin centrado e leem isso como efeito da superposicao. Previsao do
-vies de centro: saida mais espalhada -> media mais perto do centro do dominio -> f mais perto de
-f(centro). No centrado f(centro) = 0 (otimo), entao entropia "ajuda"; no deslocado f(centro) = 18,
-entao entropia ajuda individuos piores que 18 (os sorteados) e atrapalha os melhores (os finais).
-  E1: 5000 individuos iniciais sorteados (sem selecao); para cada um, entropia H(p) em bits,
-      distancia de E[x] ao centro do dominio e f(E[x]) exato nos dois dominios;
-  E2: melhor individuo final de 300 AGs por dominio, |P| = 50, G = 50 (como na figura deles).
-Parte F (as outras funcoes que o artigo cita como "qualitativamente similares"): Rastrigin,
-Esfera, Ackley, Griewank, Rosenbrock em [-2,048; 2,048] e Rosenbrock em [-30, 30], no dominio
-usual (simetrico em torno da origem) e num dominio deslocado em que o otimo fica a 20,7% da
-largura a partir da borda esquerda (a mesma posicao relativa de x = 0 em [-2,12; 8,12]).
-O artigo nao informa os dominios dessas funcoes; os usuais sao escolha nossa. |P| = 50, G = 30,
-50 repeticoes; avaliadores quantico, gemeo classico e classico.
+Part E (entropy figures of their article): they show that circuits with higher output Shannon
+entropy give smaller f on the centered Rastrigin and read this as an effect of superposition.
+Prediction of the center bias: more spread-out output -> mean closer to the domain center -> f closer
+to f(center). On the centered domain f(center) = 0 (optimum), so entropy "helps"; on the shifted
+domain f(center) = 18, so entropy helps individuals worse than 18 (the drawn ones) and hurts the
+better ones (the final ones).
+  E1: 5000 drawn initial individuals (no selection); for each one, entropy H(p) in bits,
+      distance from E[x] to the domain center and exact f(E[x]) on both domains;
+  E2: best final individual of 300 GAs per domain, |P| = 50, G = 50 (as in their figure).
+Part F (the other functions their article cites as "qualitatively similar"): Rastrigin,
+Sphere (esfera), Ackley, Griewank, Rosenbrock on [-2.048, 2.048] and Rosenbrock on [-30, 30], on the
+usual domain (symmetric around the origin) and on a shifted domain in which the optimum lies at 20.7%
+of the width from the left edge (the same relative position as x = 0 in [-2.12, 8.12]).
+Their article does not report the domains of these functions; the usual ones are our choice.
+|P| = 50, G = 30, 50 repetitions; quantum evaluator, classical analog and classical evaluator.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/entropia_funcoes_souza.py
-Saida: resultados/qga/entropia_funcoes_souza-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/entropia_funcoes_souza.py
+Output: resultados/qga/entropia_funcoes_souza-<date>.txt
 """
 from __future__ import annotations
 
@@ -97,7 +98,7 @@ def por_faixa(H, f):
     for h in range(0, 17, 2):
         m = (H >= h) & (H < h + 2)
         if m.sum() >= 5:
-            linhas.append(f"[{h},{h + 2}): n={m.sum()}, f mediano {np.median(f[m]):.2f}")
+            linhas.append(f"[{h},{h + 2}): n={m.sum()}, median f {np.median(f[m]):.2f}")
     return "; ".join(linhas)
 
 
@@ -115,18 +116,18 @@ def main():
         r2 = pool.map(e2, tarefas_e2, chunksize=1)
         rf = pool.map(ftarefa, sorted(tarefas_f, key=lambda a: a[3] != "quantico"), chunksize=2)
 
-    L = [f"Entropia e outras funcoes, reimplementacao Souza/Dardenne/Portugal (operadores v1) | semente {SEMENTE} | {date.today()}", ""]
+    L = [f"Entropy and other functions, Souza/Dardenne/Portugal reimplementation (v1 operators) | seed {SEMENTE} | {date.today()}", ""]
     H = r1[:, 0]
-    L.append(f"E1: {N_E1} individuos iniciais sorteados (sem selecao), Rastrigin; H em bits (0 a 16)")
+    L.append(f"E1: {N_E1} drawn initial individuals (no selection), Rastrigin; H in bits (0 to 16)")
     for k, dom in enumerate(DOM_R):
         dist, f = r1[:, 1 + 2 * k], r1[:, 2 + 2 * k]
         fc = VC.rastrigin(np.full(S.M, (dom[0] + dom[1]) / 2))
-        L.append(f"  {dom}: f(centro) = {fc:.2f} | Spearman(H, f) = {spearmanr(H, f).statistic:+.2f} | "
-                 f"Spearman(H, |f - f(centro)|) = {spearmanr(H, np.abs(f - fc)).statistic:+.2f} | "
-                 f"Spearman(H, distancia de E[x] ao centro) = {spearmanr(H, dist).statistic:+.2f}")
-        L.append(f"    por faixa de H: {por_faixa(H, f)}")
+        L.append(f"  {dom}: f(center) = {fc:.2f} | Spearman(H, f) = {spearmanr(H, f).statistic:+.2f} | "
+                 f"Spearman(H, |f - f(center)|) = {spearmanr(H, np.abs(f - fc)).statistic:+.2f} | "
+                 f"Spearman(H, distance from E[x] to the center) = {spearmanr(H, dist).statistic:+.2f}")
+        L.append(f"    by H band: {por_faixa(H, f)}")
     L.append("")
-    L.append(f"E2: melhor individuo final, |P|=50, G={GER_E2}, {REPS_E2} AGs por dominio")
+    L.append(f"E2: best final individual, |P|=50, G={GER_E2}, {REPS_E2} GAs per domain")
     for dom in DOM_R:
         rs = [r for r in r2 if r[0] == dom]
         h2 = np.array([r[1] for r in rs])
@@ -134,14 +135,14 @@ def main():
         fx = np.array([r[3] for r in rs])
         di = np.array([r[4] for r in rs])
         fc = VC.rastrigin(np.full(S.M, (dom[0] + dom[1]) / 2))
-        L.append(f"  {dom}: f(centro) = {fc:.2f} | Spearman(H, |f(E[x]) - f(centro)|) = {spearmanr(h2, np.abs(fx - fc)).statistic:+.2f}")
-        L.append(f"    Spearman(H, f avaliado) = {spearmanr(h2, fa).statistic:+.2f} | Spearman(H, f(E[x])) = "
-                 f"{spearmanr(h2, fx).statistic:+.2f} | Spearman(H, distancia ao centro) = {spearmanr(h2, di).statistic:+.2f} | "
-                 f"H mediana {np.median(h2):.2f}, fracao com H = 0: {(h2 < 1e-9).mean():.0%}")
-        L.append(f"    por faixa de H (f avaliado): {por_faixa(h2, fa)}")
+        L.append(f"  {dom}: f(center) = {fc:.2f} | Spearman(H, |f(E[x]) - f(center)|) = {spearmanr(h2, np.abs(fx - fc)).statistic:+.2f}")
+        L.append(f"    Spearman(H, evaluated f) = {spearmanr(h2, fa).statistic:+.2f} | Spearman(H, f(E[x])) = "
+                 f"{spearmanr(h2, fx).statistic:+.2f} | Spearman(H, distance to the center) = {spearmanr(h2, di).statistic:+.2f} | "
+                 f"H median {np.median(h2):.2f}, fraction with H = 0: {(h2 < 1e-9).mean():.0%}")
+        L.append(f"    by H band (evaluated f): {por_faixa(h2, fa)}")
     L.append("")
-    L.append(f"F: |P|=50, G={GER_F}, {REPS_F} repeticoes; melhor f avaliado, media (erro-padrao); f(centro) = valor da funcao no centro do dominio")
-    L.append("funcao | dominio | f(centro) | quantico g0 | classico g0 | gemeo g0 | quantico g30 | classico g30 | gemeo g30 | "
+    L.append(f"F: |P|=50, G={GER_F}, {REPS_F} repetitions; best evaluated f, mean (standard error); f(center) = value of the function at the domain center")
+    L.append("function | domain | f(center) | quantum g0 | classical g0 | analog g0 | quantum g30 | classical g30 | analog g30 | "
              "q - c g0 | q - c g30")
     for nome, func, dom in FUNCS:
         for d in (dom, deslocado(S.OTIMOS[func], *dom)):
@@ -154,7 +155,7 @@ def main():
             fc = S.FUNCOES[func](np.full(S.M, (d[0] + d[1]) / 2))
             L.append(f"{nome} | {d} | {fc:.3g} | {ms('quantico', 0)} | {ms('classico', 0)} | {ms('gemeo', 0)} | "
                      f"{ms('quantico', GER_F)} | {ms('classico', GER_F)} | {ms('gemeo', GER_F)} | {dq(0)} | {dq(GER_F)}")
-    L.append(f"\ntempo {time.time() - t0:.0f}s")
+    L.append(f"\ntime {time.time() - t0:.0f}s")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"entropia_funcoes_souza-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0

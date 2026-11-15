@@ -1,4 +1,4 @@
-"""Confere a marginal exata da aptidao (motor esparso) contra o Aer em dois casos (13/11/2026)."""
+"""Checks the exact fitness marginal (sparse engine) against Aer in two cases (13 Nov 2026)."""
 import sys, math
 from pathlib import Path
 import networkx as nx, numpy as np
@@ -20,4 +20,4 @@ for it in (1, 3):
     ex = np.zeros(2 ** len(fit))
     for y, v in mf.items(): ex[y] = prob_decimal(v, m.k)
     _, aer = V.distribuicoes(qc, ind, fit)
-    print(f"iter={it} max|exato - Aer| na aptidao = {np.abs(ex - aer).max():.2e}")
+    print(f"iter={it} max|exact - Aer| on fitness ={np.abs(ex - aer).max():.2e}")

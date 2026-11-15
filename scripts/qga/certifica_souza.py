@@ -1,28 +1,27 @@
-"""Certificacao exata do emaranhamento em Souza, Dardenne e Portugal (13/11/2026).
+"""Exact certification of entanglement in Souza, Dardenne and Portugal (13 Nov 2026).
 
-Pergunta: os individuos que o AG quantico seleciona (reimplementacao de vies_centro.py) estao
-de fato emaranhados, e o emaranhamento pode influir na aptidao?
+Question: are the individuals selected by the quantum GA (reimplementation in vies_centro.py)
+actually entangled, and can the entanglement influence the fitness?
 
-Observacao analitica (a conferir no artigo deles): a aptidao e f(x*), x* = media dos valores
-decodificados sobre os shots. Logo f depende do circuito so pela distribuicao medida p(x) na
-base computacional; o valor esperado de x* depende so das marginais de um qubit. Um estado
-emaranhado e uma mistura classica com o mesmo p(x) dao exatamente a mesma distribuicao de
-aptidao.
+Analytical remark (to be checked against their article): the fitness is f(x*), x* = mean of the
+decoded values over the shots. Hence f depends on the circuit only through the measured
+distribution p(x) in the computational basis; the expected value of x* depends only on the
+one-qubit marginals. An entangled state and a classical mixture with the same p(x) give exactly
+the same fitness distribution.
 
-Para cada individuo (melhores da geracao final do AG quantico, nos dois dominios, e
-individuos iniciais sorteados), no motor exato esparso em Z[zeta_16]:
-  (1) separavel entre os registros das duas variaveis (qubits 0-7 | 8-15)? Teste exato de
-      posto 1: M[i,j] M[i0,j0] == M[i,j0] M[i0,j] no anel para todo i, j;
-  (2) posto de Schmidt nesse corte: cota inferior certificada (posto modulo primos p = 1 mod 16,
-      zeta -> raiz 16-esima da unidade em F_p; reducao nunca aumenta o posto) e valor numerico
-      por SVD, so para referencia;
-  (3) quantos qubits estao emaranhados com o resto (teste exato de posto 1 em cada corte de um
-      qubit);
-  (4) p(x) fatora entre os registros? P(x1,x2) == P1(x1) P2(x2), exato;
-  (5) as marginais de um qubit, exatas, pertencem a {0, 1/2, 1}?
+For each individual (best of the final generation of the quantum GA, in both domains, and
+randomly drawn initial individuals), in the exact sparse engine over Z[zeta_16]:
+  (1) separable between the registers of the two variables (qubits 0-7 | 8-15)? Exact rank-1
+      test: M[i,j] M[i0,j0] == M[i,j0] M[i0,j] in the ring for all i, j;
+  (2) Schmidt rank across that cut: certified lower bound (rank modulo primes p = 1 mod 16,
+      zeta -> primitive 16th root of unity in F_p; reduction never increases the rank) and the
+      numerical value by SVD, for reference only;
+  (3) how many qubits are entangled with the rest (exact rank-1 test on each one-qubit cut);
+  (4) does p(x) factor between the registers? P(x1,x2) == P1(x1) P2(x2), exactly;
+  (5) do the exact one-qubit marginals belong to {0, 1/2, 1}?
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_souza.py
-Saida: resultados/qga/certifica_souza-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_souza.py
+Output: resultados/qga/certifica_souza-<date>.txt
 """
 from __future__ import annotations
 
@@ -46,7 +45,7 @@ FASE_M = {"z": 8, "s": 4, "sdg": 12, "t": 2, "tdg": 14}
 ZERO = (0,) * 8
 
 
-# ---------------- circuito -> motor exato ----------------
+# ---------------- circuit -> exact engine ----------------
 def portas_exatas(ind):
     out = [("mcx", [], q) for q in range(VC.NQ) if (ind["base"] >> q) & 1]
     for cam in ind["cams"]:
@@ -81,9 +80,9 @@ def estado_exato(ind):
     return m
 
 
-# ---------------- testes exatos ----------------
+# ---------------- exact tests ----------------
 def posto1(amps, corte):
-    """amps: {x: u}; corte: mascara dos qubits do lado A. Posto 1 exato?"""
+    """amps: {x: u}; corte: mask of the qubits on side A. Exactly rank 1?"""
     itens = list(amps.items())
     if not itens:
         return True
@@ -95,7 +94,7 @@ def posto1(amps, corte):
         rhs = mult(amps.get(a | b0, ZERO), amps.get(a0 | b, ZERO))
         if lhs != rhs:
             return False
-    # entradas zero fora do suporte: M[a,b] = 0 exige M[a,b0] M[a0,b] = 0
+    # zero entries outside the support: M[a,b] = 0 requires M[a,b0] M[a0,b] = 0
     As = {x & corte for x in amps}
     Bs = {x & ~corte for x in amps}
     for a in As:
@@ -126,7 +125,7 @@ def VC_primo(n):
 
 
 def raiz16(p):
-    """Raiz primitiva 16-esima da unidade em F_p (p = 1 mod 16)."""
+    """Primitive 16th root of unity in F_p (p = 1 mod 16)."""
     for g in range(2, p):
         r = pow(g, (p - 1) // 16, p)
         if pow(r, 8, p) == p - 1:
@@ -184,7 +183,7 @@ def posto_svd(amps, lado_a, lado_b, k):
 
 
 def fatora(m, A, B):
-    """P(x) == P_A(xA) P_B(xB) exatamente."""
+    """P(x) == P_A(xA) P_B(xB) exactly."""
     pa = m.marginal(A)
     pb = m.marginal(B)
     pab = m.marginal(A + B)
@@ -198,7 +197,7 @@ def fatora(m, A, B):
 
 
 def marginais_meio(m):
-    """Todas as marginais de um qubit em {0, 1/2, 1}?"""
+    """Are all one-qubit marginals in {0, 1/2, 1}?"""
     ok = True
     for q in range(VC.NQ):
         mg = m.marginal([q])
@@ -224,7 +223,7 @@ def certifica(args):
                 fatora=fatora(m, A, B), meio=marginais_meio(m))
 
 
-# ---------------- AG que devolve o melhor individuo final ----------------
+# ---------------- GA that returns the best final individual ----------------
 def roda_ga_ind(args):
     dominio, semente = args
     rng = np.random.default_rng(semente)
@@ -263,16 +262,16 @@ def resumo(rotulo, rs):
     pinf = [r["pinf"] for r in rs]
     concorda = sum(r["pinf"] == r["psvd"] for r in rs)
     emar = [r["emar"] for r in rs]
-    return (f"{rotulo} | n={n} | separaveis entre registros: {sep} | posto de Schmidt (cota certificada) "
-            f"mediana {int(np.median(pinf))}, max {max(pinf)} | cota mod p == SVD em {concorda}/{n} | "
-            f"qubits emaranhados com o resto: mediana {int(np.median(emar))}, max {max(emar)} | "
-            f"p(x) fatora entre registros: {fat}/{n} | marginais em {{0,1/2,1}}: {meio}/{n}")
+    return (f"{rotulo} | n={n} | separable between registers: {sep} | Schmidt rank (certified bound) "
+            f"median {int(np.median(pinf))}, max {max(pinf)} | bound mod p == SVD in {concorda}/{n} | "
+            f"qubits entangled with the rest: median {int(np.median(emar))}, max {max(emar)} | "
+            f"p(x) factors between registers: {fat}/{n} | marginals in {{0,1/2,1}}: {meio}/{n}")
 
 
 def main():
     rng = np.random.default_rng(SEMENTE)
-    linhas = [f"Souza/Dardenne/Portugal (reimplementacao): certificacao exata do emaranhamento | "
-              f"semente {SEMENTE} | {date.today()}", f"primos {PRIMOS}"]
+    linhas = [f"Souza/Dardenne/Portugal (reimplementation): exact certification of entanglement | "
+              f"seed {SEMENTE} | {date.today()}", f"primes {PRIMOS}"]
     dominios = ((-5.12, 5.12), (-2.12, 8.12))
     tarefas = [(dom, SEMENTE + 1000 * r + k) for k, dom in enumerate(dominios) for r in range(REPS)]
     with Pool(16) as pool:
@@ -285,8 +284,8 @@ def main():
         linhas.append(resumo(rot, rs))
         print(linhas[-1], flush=True)
     linhas.append("")
-    linhas.append("melhores finais, um por linha: dominio | f | k | suporte | separavel | posto >= | posto SVD | "
-                  "qubits emaranhados | p fatora | marginais em {0,1/2,1}")
+    linhas.append("best final individuals, one per line: domain | f | k | support | separable | rank >= | SVD rank | "
+                  "entangled qubits | p factors | marginals in {0,1/2,1}")
     for c in certs:
         if c["rotulo"].startswith("final"):
             linhas.append(f"{c['rotulo']} | {c['f']:.4f} | {c['k']} | {c['suporte']} | {c['sep']} | {c['pinf']} | "

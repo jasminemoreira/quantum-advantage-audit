@@ -1,7 +1,7 @@
-"""Confere numericamente a cota de Pinsker do vies de centro em individuos do Souza (v1).
+"""Numerically checks the Pinsker bound of the center bias on Souza individuals (v1).
 
-Cota global:   |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (N - H(p)) / 2)
-Cota marginal: |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (n - H(p_i)) / 2), p_i = marginal do registro i
+Global bound:   |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (N - H(p)) / 2)
+Marginal bound: |E[x_i] - c_i| <= (b - a) * sqrt(ln2 * (n - H(p_i)) / 2), p_i = marginal of register i
 """
 import sys
 import numpy as np
@@ -29,7 +29,7 @@ for k in range(400):
     Hp = H(p)
     ex = (xs * p[:, None]).sum(axis=0)
     for i in range(S.M):
-        # marginal do registro i: agrupa por valor decodificado de x_i (bijecao com z_i)
+        # marginal of register i: group by decoded value of x_i (bijection with z_i)
         vals, inv = np.unique(xs[:, i], return_inverse=True)
         pi = np.bincount(inv, weights=p, minlength=len(vals))
         cg = (b - a) * np.sqrt(np.log(2) * max(S.NQ - Hp, 0) / 2)
@@ -42,5 +42,5 @@ for k in range(400):
             pior_g = max(pior_g, d / cg)
         if cm > 0:
             pior_m = max(pior_m, d / cm)
-print(f"N={S.NQ}, n={S.NB}, m={S.M}; 400 individuos; violacoes (d > cota marginal ou marginal > global): {viol}")
-print(f"maior razao d/cota global {pior_g:.3f}; d/cota marginal {pior_m:.3f}")
+print(f"N={S.NQ}, n={S.NB}, m={S.M}; 400 individuals; violations (d > marginal bound or marginal > global): {viol}")
+print(f"largest ratio d/global bound {pior_g:.3f}; d/marginal bound {pior_m:.3f}")

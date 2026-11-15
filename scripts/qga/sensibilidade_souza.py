@@ -1,21 +1,21 @@
-"""Analise de sensibilidade da reimplementacao de Souza/Dardenne/Portugal (13/11/2026).
+"""Sensitivity analysis of the reimplementation of Souza/Dardenne/Portugal (13 Nov 2026).
 
-Cada escolha nao fixada pelo texto (ver souza_v1.py, OPC) e trocada por uma alternativa, uma de
-cada vez, mais uma variante com todas as alternativas juntas. Para cada variante, as previsoes
-que sustentam o argumento do artigo:
-  P1 dominio centrado, g0: quantico melhor que classico (vies de centro ajuda);
-  P2 dominio deslocado, g0: quantico pior que classico (vies de centro atrapalha);
-  P3 dominio deslocado, g30: quantico nao supera o classico;
-  P4 gemeo classico nao e pior que o quantico (g0 e g30, nos dois dominios);
-  P5 emaranhamento "bell" entre individuos ajuda no centrado e atrapalha no deslocado (g30);
-  P6 o equivalente classico do "bell" reproduz o quantico+bell (g30);
-  P7 emaranhamento dentro do melhor individuo final: mais frequente no centrado que no deslocado.
-Parte A: |P| = 50, 30 geracoes, 50 repeticoes. Parte B: |P| = 10, 30 geracoes, 100 repeticoes.
-Posto de Schmidt entre os registros calculado em ponto flutuante (SVD, corte 1e-8); a versao
-exata ja foi feita para o padrao em certifica_souza_v1.py.
+Each choice not fixed by their text (see souza_v1.py, OPC) is replaced by an alternative, one at a
+time, plus one variant with all alternatives together. For each variant, the predictions that
+support the argument of the article:
+  P1 centered domain, g0: quantum better than classical (center bias helps);
+  P2 shifted domain, g0: quantum worse than classical (center bias hurts);
+  P3 shifted domain, g30: quantum does not beat the classical;
+  P4 the classical analog is not worse than the quantum (g0 and g30, on both domains);
+  P5 "bell" entanglement between individuals helps on the centered domain and hurts on the shifted one (g30);
+  P6 the classical equivalent of "bell" reproduces quantum+bell (g30);
+  P7 entanglement within the best final individual: more frequent on the centered than on the shifted domain.
+Part A: |P| = 50, 30 generations, 50 repetitions. Part B: |P| = 10, 30 generations, 100 repetitions.
+Schmidt rank between the registers computed in floating point (SVD, cutoff 1e-8); the exact
+version was already done for the default variant in certifica_souza_v1.py.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/sensibilidade_souza.py [variante ...]
-Saida: resultados/qga/sensibilidade_souza-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/sensibilidade_souza.py [variant ...]
+Output: resultados/qga/sensibilidade_souza-<date>.txt
 """
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ VARIANTES = {
 
 
 def posto_registros(ind):
-    psi = VC.estado(S.sem_i(ind)).reshape(1 << S.NB, 1 << S.NB)  # linhas: registro 1; colunas: registro 0
+    psi = VC.estado(S.sem_i(ind)).reshape(1 << S.NB, 1 << S.NB)  # rows: register 1; columns: register 0
     s = np.linalg.svd(psi, compute_uv=False)
     return int((s > 1e-8 * s[0]).sum())
 
@@ -69,7 +69,7 @@ def tarefa(args):
 
 
 def dif(res, a, b, g):
-    """media(a) - media(b) na geracao g, com erro-padrao."""
+    """mean(a) - mean(b) at generation g, with standard error."""
     ca = np.array([r[5][g] for r in res if (r[1], r[2], r[3], r[4]) == a])
     cb = np.array([r[5][g] for r in res if (r[1], r[2], r[3], r[4]) == b])
     return ca.mean() - cb.mean(), np.sqrt(ca.var(ddof=1) / len(ca) + cb.var(ddof=1) / len(cb))
@@ -95,22 +95,22 @@ def relatorio(var, res):
     ok = dict(
         P1=p1[0] + 2 * p1[1] < 0,
         P2=p2[0] - 2 * p2[1] > 0,
-        P3=p3[0] + 2 * p3[1] > 0,  # quantico nao significativamente melhor
-        P4=all(d[0] - 2 * d[1] < 0 for d in p4),  # gemeo nao significativamente pior
+        P3=p3[0] + 2 * p3[1] > 0,  # quantum not significantly better
+        P4=all(d[0] - 2 * d[1] < 0 for d in p4),  # analog not significantly worse
         P5=p5c[0] + 2 * p5c[1] < 0 and p5d[0] - 2 * p5d[1] > 0,
         P6=all(abs(d[0]) < 2.5 * d[1] or abs(d[0]) < 0.5 for d in p6),
         P7=sep[C] < sep[D],
     )
-    linhas = [f"[{var}] {VARIANTES[var] or 'escolhas declaradas'}",
-              f"  P1 centrado g0, quantico - classico: {fmt(p1)}",
-              f"  P2 deslocado g0, quantico - classico: {fmt(p2)}",
-              f"  P3 deslocado g30, quantico - classico: {fmt(p3)}",
-              "  P4 gemeo - quantico (centrado g0, g30; deslocado g0, g30): " + ", ".join(fmt(d) for d in p4),
-              f"  P5 bell - sem (g30): centrado {fmt(p5c)}, deslocado {fmt(p5d)}",
-              "  P6 gemeo+bell - quantico+bell (g30): centrado " + fmt(p6[0]) + ", deslocado " + fmt(p6[1]),
-              f"  P7 melhor final separavel entre registros: centrado {sep[C]:.0%} (posto mediano {np.median(postos[C]):.0f}), "
-              f"deslocado {sep[D]:.0%} (posto mediano {np.median(postos[D]):.0f})",
-              "  confirmadas: " + " ".join(f"{k}={'sim' if v else 'NAO'}" for k, v in ok.items())]
+    linhas = [f"[{var}] {VARIANTES[var] or 'declared choices'}",
+              f"  P1 centered g0, quantum - classical: {fmt(p1)}",
+              f"  P2 shifted g0, quantum - classical: {fmt(p2)}",
+              f"  P3 shifted g30, quantum - classical: {fmt(p3)}",
+              "  P4 analog - quantum (centered g0, g30; shifted g0, g30): " + ", ".join(fmt(d) for d in p4),
+              f"  P5 bell - without (g30): centered {fmt(p5c)}, shifted {fmt(p5d)}",
+              "  P6 analog+bell - quantum+bell (g30): centered " + fmt(p6[0]) + ", shifted " + fmt(p6[1]),
+              f"  P7 best final separable between registers: centered {sep[C]:.0%} (median rank {np.median(postos[C]):.0f}), "
+              f"shifted {sep[D]:.0%} (median rank {np.median(postos[D]):.0f})",
+              "  confirmed: " + " ".join(f"{k}={'yes' if v else 'NO'}" for k, v in ok.items())]
     return linhas, ok
 
 
@@ -124,20 +124,20 @@ def main():
                 tarefas += [(var, "A", modo, None, dom, 50, SEMENTE + 10 ** 6 * v + 10000 * k + 1000 * j + r) for r in range(REPS_A)]
             for j, (modo, emar) in enumerate((("quantico", None), ("quantico", "bell"), ("gemeo", "bell"))):
                 tarefas += [(var, "B", modo, emar, dom, 10, SEMENTE + 10 ** 6 * v + 500000 + 10000 * k + 1000 * j + r) for r in range(REPS_B)]
-    # tarefas caras primeiro, para equilibrar a fila
+    # expensive tasks first, to balance the queue
     tarefas.sort(key=lambda a: -(a[5] * (3 if a[2] == "quantico" else 1) * (2 if a[3] else 1) * (8 if a[0] == "prof8" else 1)))
     with Pool(16) as pool:
         res = pool.map(tarefa, tarefas, chunksize=1)
-    linhas = [f"Sensibilidade da reimplementacao Souza/Dardenne/Portugal | semente {SEMENTE} | {date.today()}",
-              f"Parte A |P|=50, {REPS_A} rep.; Parte B |P|=10, {REPS_B} rep.; {GER} geracoes; diferencas: media (erro-padrao)",
-              "criterio: P1, P2, P5 com |dif| > 2 EP no sentido previsto; P3, P4 sem diferenca > 2 EP contra o argumento; "
-              "P6 com |dif| < 2,5 EP ou < 0,5; P7 fracao separavel menor no centrado", ""]
+    linhas = [f"Sensitivity of the Souza/Dardenne/Portugal reimplementation | seed {SEMENTE} | {date.today()}",
+              f"Part A |P|=50, {REPS_A} rep.; Part B |P|=10, {REPS_B} rep.; {GER} generations; differences: mean (standard error)",
+              "criterion: P1, P2, P5 with |diff| > 2 SE in the predicted direction; P3, P4 with no difference > 2 SE against the argument; "
+              "P6 with |diff| < 2.5 SE or < 0.5; P7 separable fraction smaller on the centered domain", ""]
     resumo = []
     for var in nomes:
         ls, ok = relatorio(var, [r for r in res if r[0] == var])
         linhas += ls + [""]
-        resumo.append(f"{var:16s} " + " ".join("sim" if ok[k] else "NAO" for k in ok))
-    linhas += ["resumo (P1 a P7):"] + resumo + [f"\ntempo {time.time() - t0:.0f}s"]
+        resumo.append(f"{var:16s} " + " ".join("yes" if ok[k] else "NO" for k in ok))
+    linhas += ["summary (P1 to P7):"] + resumo + [f"\ntime {time.time() - t0:.0f}s"]
     print("\n".join(linhas))
     (RAIZ / "resultados" / "qga" / f"sensibilidade_souza-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0

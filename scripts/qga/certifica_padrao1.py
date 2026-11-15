@@ -1,27 +1,28 @@
-"""Certificado estrutural do padrao 1: o circuito equivale a sortear bits independentes (14/11/2026).
+"""Structural certificate of Pattern 2 (product state): the circuit is equivalent to drawing independent bits (14 Nov 2026).
 
-Lema (projeto v2, generalizado): se o estado antes das rotacoes e produto, cada qubit recebe portas
-de um qubit quaisquer enquanto nao foi acoplado a outro, e todo acoplamento (porta de dois ou mais
-qubits) e toda porta posterior num qubit acoplado sao MONOMIAIS (permutacao da base vezes fases),
-entao a distribuicao medida e a de bits independentes y_i ~ Bernoulli(p_i) empurrada por uma funcao
-booleana pi(y). O estado pode ficar emaranhado (CNOT sobre superposicao), mas o emaranhamento nao
-aparece na medicao na base computacional. Vale para quaisquer angulos e qualquer numero de qubits.
+Lemma (project v2, generalized): if the state before the rotations is a product state, each qubit
+receives arbitrary one-qubit gates while it has not been coupled to another one, and every coupling
+(gate on two or more qubits) and every later gate on a coupled qubit is MONOMIAL (basis permutation
+times phases), then the measured distribution is that of independent bits y_i ~ Bernoulli(p_i) pushed
+forward by a Boolean function pi(y). The state may become entangled (CNOT on a superposition), but the
+entanglement does not show up in a measurement in the computational basis. Holds for any angles and any
+number of qubits.
 
-O verificador:
-  (1) prefixo: maior trecho inicial com portas do anel Z[zeta_16] (H, X, CNOT, MCX, fases k*pi/8),
-      executado no motor exato esparso; decide EXATAMENTE se o estado e produto (posto 1 em cada
-      corte de um qubit, por menores 2x2 no anel);
-  (2) resto: regras acima, por nome de porta (lista de portas monomiais), descendo nas definicoes;
-  (3) medicao so no fim.
-Conferencia: para n pequeno e angulos sorteados, a distribuicao do amostrador classico construido
-pelo verificador e comparada com o statevector do Qiskit (TV). Controles negativos devem falhar.
+The checker:
+  (1) prefix: longest initial stretch of gates in the ring Z[zeta_16] (H, X, CNOT, MCX, phases k*pi/8),
+      run on the exact sparse engine; decides EXACTLY whether the state is a product state (rank 1 in
+      every one-qubit cut, via 2x2 minors in the ring);
+  (2) rest: rules above, by gate name (list of monomial gates), descending into the definitions;
+  (3) measurement only at the end.
+Cross-check: for small n and randomly drawn angles, the distribution of the classical sampler built
+by the checker is compared with the Qiskit statevector (TV). Negative controls must fail.
 
-Circuitos dos casos RECONSTRUIDOS a partir das notas de leitura
-(texto/busca-bases/registro/qga-artigo3-2026-11-11/leitura.md), nao do codigo dos autores (nenhum
-publica codigo). Conferir cada reconstrucao contra as figuras antes do artigo.
+Circuits of the cases RECONSTRUCTED from the reading notes
+(texto/busca-bases/registro/qga-artigo3-2026-11-11/leitura.md), not from the authors' code (none of
+them publishes code). Check each reconstruction against the figures before the article.
 
-Uso (WSL): externos/mqtbench/.venv/bin/python scripts/qga/certifica_padrao1.py
-Saida: resultados/qga/certifica_padrao1-<data>.txt
+Usage (WSL): externos/mqtbench/.venv/bin/python scripts/qga/certifica_padrao1.py
+Output: resultados/qga/certifica_padrao1-<data>.txt
 """
 from __future__ import annotations
 
@@ -50,7 +51,7 @@ IGNORA = {"barrier", "delay", "global_phase"}
 
 
 def portas_planas(qc):
-    """Lista (nome, qubits, operacao), descendo nas definicoes de portas fora das listas."""
+    """List of (name, qubits, operation), descending into the definitions of gates not in the lists."""
     out = []
 
     def anda(circ, mapa):
@@ -69,7 +70,7 @@ def portas_planas(qc):
 
 
 def produto_exato(m, n):
-    """Estado do motor esparso e produto? Posto 1 em cada corte q | resto, por menores 2x2 no anel."""
+    """Is the sparse-engine state a product state? Rank 1 in every cut q | rest, via 2x2 minors in the ring."""
     for q in range(n):
         b = 1 << q
         zero = {x: u for x, u in m.s.items() if not x & b}
@@ -87,10 +88,10 @@ def produto_exato(m, n):
 
 
 def classifica(qc):
-    """Devolve (veredito, detalhe, plano). plano serve ao amostrador classico."""
+    """Returns (verdict, detail, plan). plan is used by the classical sampler."""
     n = qc.num_qubits
     gs = portas_planas(qc)
-    # (1) prefixo no anel
+    # (1) prefix in the ring
     i = 0
     m = MotorEsparso(n)
     while i < len(gs) and gs[i][0] != "measure":
@@ -104,13 +105,13 @@ def classifica(qc):
         i += 1
     prefixo = i
     if not produto_exato(m, n):
-        return False, f"estado apos o prefixo exato ({prefixo} portas) nao e produto", None
-    # (2) resto. Estados por qubit: basico (so portas monomiais ate aqui: valor de base definido),
-    # acoplado (ja participou de porta de dois ou mais qubits), travado (testemunha usada).
-    # Regra R2 (medicao adiada): porta nao monomial num qubit acoplado q so e aceita se ha copia
-    # do valor de q noutro qubit w (feita por CNOT com w ainda basico) e w nunca mais recebe porta.
-    # Entao os ramos q = 0 e q = 1 ficam ortogonais em w e nao interferem: equivale a medir q e
-    # prepara-lo de novo.
+        return False, f"exact-prefix state ({prefixo} gates) is not a product state", None
+    # (2) rest. States per qubit: basic (only monomial gates so far: definite basis value),
+    # coupled (has already taken part in a gate on two or more qubits), locked (witness used).
+    # Rule R2 (deferred measurement): a non-monomial gate on a coupled qubit q is accepted only if there
+    # is a copy of the value of q in another qubit w (made by a CNOT with w still basic) and w never
+    # receives a gate again. Then the branches q = 0 and q = 1 are orthogonal in w and do not interfere:
+    # this is equivalent to measuring q and preparing it again.
     basico = {q: len(m.marginal([q])) == 1 for q in range(n)}
     classe = {q: {q} for q in range(n)}
     acoplado, travado, medido = set(), set(), set()
@@ -126,9 +127,9 @@ def classifica(qc):
             medido.add(qs[0])
             continue
         if any(q in medido for q in qs):
-            return False, f"porta {nm} depois de medir", None
+            return False, f"gate {nm} after measurement", None
         if any(q in travado for q in qs):
-            return False, f"porta {nm} numa testemunha ja usada (porta {j})", None
+            return False, f"gate {nm} on an already used witness (gate {j})", None
         if len(qs) == 1:
             q = qs[0]
             if nm in FLIP1 | DIAG1:
@@ -137,14 +138,14 @@ def classifica(qc):
             if q in acoplado:
                 outros = classe[q] - {q}
                 if not outros:
-                    return False, f"porta nao monomial {nm} num qubit acoplado sem copia (porta {j})", None
+                    return False, f"gate non-monomial {nm} on a coupled qubit without a copy (gate {j})", None
                 travado.update(outros)
                 sai_da_classe(q)
                 acoplado.discard(q)
                 usos_r2 += 1
         else:
             if nm not in PERM | DIAGM:
-                return False, f"acoplamento nao monomial {nm} (porta {j})", None
+                return False, f"coupling not monomial {nm} (gate {j})", None
             if nm == "cx" and basico[qs[1]] and qs[1] not in acoplado:
                 c, t = qs
                 sai_da_classe(t)
@@ -156,8 +157,8 @@ def classifica(qc):
             for q in qs:
                 basico[q] = False
             acoplado.update(qs)
-    return True, (f"prefixo exato {prefixo} portas, produto; {len(gs) - prefixo} portas depois; "
-                  f"{len(acoplado)} qubits acoplados; regra R2 usada {usos_r2} vezes"), (gs, prefixo)
+    return True, (f"exact prefix {prefixo} gates, product; {len(gs) - prefixo} gates after; "
+                  f"{len(acoplado)} coupled qubits; rule R2 used {usos_r2} times"), (gs, prefixo)
 
 
 def _aplica_perm(bits, nm, qs):
@@ -171,18 +172,18 @@ def _aplica_perm(bits, nm, qs):
 
 
 def amostrador(qc, plano):
-    """Distribuicao exata do programa classico equivalente (float), por enumeracao de ramos.
+    """Exact distribution of the equivalent classical program (float), by enumeration of branches.
 
-    Qubit 'fresco' guarda um vetor de 2 amplitudes (estado local); ao entrar numa porta de varios
-    qubits ele e sorteado (ramo 0 e ramo 1) e vira bit classico. Porta nao monomial num bit
-    classico (so ocorre via R2) o transforma de novo em qubit fresco com vetor U|b>.
+    A 'fresh' qubit holds a vector of 2 amplitudes (local state); when it enters a gate on several
+    qubits it is drawn (branch 0 and branch 1) and becomes a classical bit. A non-monomial gate on a
+    classical bit (only happens via R2) turns it back into a fresh qubit with vector U|b>.
     """
     gs, prefixo = plano
     n = qc.num_qubits
     pre = QuantumCircuit(n)
     for nm, qs, op in gs[:prefixo]:
         pre.append(op, qs)
-    psi = Statevector(pre).data.reshape([2] * n)  # eixo 0 = qubit n-1
+    psi = Statevector(pre).data.reshape([2] * n)  # axis 0 = qubit n-1
     vet0 = {}
     for q in range(n):
         mat = np.moveaxis(psi, n - 1 - q, 0).reshape(2, -1)
@@ -243,11 +244,11 @@ def amostrador(qc, plano):
     return dist
 
 
-# ---- casos reconstruidos ----
+# ---- reconstructed cases ----
 def ballinas(n, th):
-    """Ballinas e Montiel 2022, Fig. 2 (conferida em 14/11): X na ancila; H em todos; CNOT de cada
-    qubit de dados para a ancila; H so nos dados; Ry em todos, inclusive a ancila; mede os dados.
-    Ballinas et al. 2024 diz usar o circuito de Deutsch-Jozsa; figura ainda nao conferida."""
+    """Ballinas and Montiel 2022, Fig. 2 (checked on 14 Nov): X on the ancilla; H on all; CNOT from each
+    data qubit to the ancilla; H on the data only; Ry on all, including the ancilla; measures the data.
+    Ballinas et al. 2024 says it uses the Deutsch-Jozsa circuit; figure not yet checked."""
     qc = QuantumCircuit(n + 1, n)
     qc.x(n)
     qc.h(range(n + 1))
@@ -261,11 +262,11 @@ def ballinas(n, th):
 
 
 def ballinas2024(n, th, leitura):
-    """Ballinas et al. 2024 (Axioms 13:48), Fig. 4 (conferida em 14/11 no PDF v3). A figura mostra
-    H em todos, CNOT de cada qubit de dados para a ancila, H nos dados, Ry em todos, mede os dados,
-    SEM a porta X na ancila. O texto diz que a ancila deve estar em |1> e que ela CONTROLA os CNOT.
-    Leituras: 'figura' (sem X, ancila alvo), 'texto_x' (com X, ancila alvo), 'texto_controle'
-    (com X, ancila controle)."""
+    """Ballinas et al. 2024 (Axioms 13:48), Fig. 4 (checked on 14 Nov in PDF v3). The figure shows
+    H on all, CNOT from each data qubit to the ancilla, H on the data, Ry on all, measures the data,
+    WITHOUT the X gate on the ancilla. The text says that the ancilla must be in |1> and that it CONTROLS
+    the CNOTs. Readings: 'figura' (no X, ancilla is target), 'texto_x' (with X, ancilla is target),
+    'texto_controle' (with X, ancilla is control)."""
     qc = QuantumCircuit(n + 1, n)
     if leitura != "figura":
         qc.x(n)
@@ -283,8 +284,8 @@ def ballinas2024(n, th, leitura):
 
 
 def _pares_eaqga(n, rng, cadeia):
-    """Pares (controle, alvo). Estrela: uma cadeia tem um controle e varios alvos (texto da Sec. III-B,
-    Fig. 4). Cadeia: o alvo de um par pode ser o controle do seguinte (permitido pelo pseudocodigo)."""
+    """Pairs (control, target). Star: a chain has one control and several targets (text of Sec. III-B,
+    Fig. 4). Chain: the target of one pair may be the control of the next (allowed by the pseudocode)."""
     ordem = [int(x) for x in rng.permutation(n)]
     pares = []
     while len(ordem) >= 2:
@@ -298,9 +299,9 @@ def _pares_eaqga(n, rng, cadeia):
 
 
 def eaqga(n, th, rng, cadeia=False):
-    """EAQGA, Algorithm 1 como impresso (v1, conferido em 14/11): para cada par, RY no controle,
-    X no alvo se o bit do pai no controle for 1, CNOT; qubits sem par recebem um RY; mede tudo.
-    O RY e repetido no controle a cada par, entao pode vir depois de um CNOT nele (regra R2)."""
+    """EAQGA, Algorithm 1 as printed (v1, checked on 14 Nov): for each pair, RY on the control,
+    X on the target if the parent's bit at the control is 1, CNOT; unpaired qubits receive one RY; measures all.
+    The RY is repeated on the control for each pair, so it may come after a CNOT on it (rule R2)."""
     qc = QuantumCircuit(n, n)
     pares, soltos = _pares_eaqga(n, rng, cadeia)
     pai = rng.integers(0, 2, n)
@@ -324,8 +325,8 @@ def eaqga_cadeia(n, th, rng):
 
 
 def gamberi(n, th):
-    """Gamberi e Bianchini 2026, Algorithm 3 (v1, conferido em 14/11): superposicao uniforme na
-    geracao inicial (porta nao nomeada; H aqui), Y-rotations por qubit, mede. Sem porta de 2 qubits."""
+    """Gamberi and Bianchini 2026, Algorithm 3 (v1, checked on 14 Nov): uniform superposition in the
+    initial generation (gate not named; H here), Y-rotations per qubit, measures. No 2-qubit gate."""
     qc = QuantumCircuit(n, n)
     qc.h(range(n))
     for i in range(n):
@@ -335,8 +336,8 @@ def gamberi(n, th):
 
 
 def saini(n, th):
-    """Saini et al. 2025, IEEE Access, Fig. 3 (conferida em 14/11 no IEEE Xplore): RX por qubit e
-    medicao; a Fig. 5 (transpilado no ibm_nairobi) so tem RZ e raiz de X por qubit, sem porta de 2 qubits."""
+    """Saini et al. 2025, IEEE Access, Fig. 3 (checked on 14 Nov on IEEE Xplore): RX per qubit and
+    measurement; Fig. 5 (transpiled on ibm_nairobi) has only RZ and square root of X per qubit, no 2-qubit gate."""
     qc = QuantumCircuit(n, n)
     for i in range(n):
         qc.rx(th[i], i)
@@ -344,7 +345,7 @@ def saini(n, th):
     return qc
 
 
-# ---- controles negativos ----
+# ---- negative controls ----
 def neg_interferencia(n, th):
     qc = QuantumCircuit(n, n)
     qc.h(0)
@@ -368,14 +369,14 @@ def neg_qaoa(n, th):
 def neg_prefixo(n, th):
     qc = QuantumCircuit(n, n)
     qc.h(0)
-    qc.cx(0, 1)  # Bell no prefixo exato, depois rotacao
+    qc.cx(0, 1)  # Bell state in the exact prefix, then rotation
     qc.ry(th[0], 0)
     qc.measure(range(n), range(n))
     return qc
 
 
 def neg_r2_alvo_girado(n, th):
-    """Copia feita num alvo que ja estava em superposicao: nao e testemunha."""
+    """Copy made on a target that was already in superposition: it is not a witness."""
     qc = QuantumCircuit(n, n)
     qc.ry(th[0], 0)
     qc.ry(th[1], 1)
@@ -386,7 +387,7 @@ def neg_r2_alvo_girado(n, th):
 
 
 def neg_r2_testemunha_mexida(n, th):
-    """Copia boa, mas a testemunha recebe H antes do RY no controle."""
+    """Good copy, but the witness receives H before the RY on the control."""
     qc = QuantumCircuit(n, n)
     qc.ry(th[0], 0)
     qc.cx(0, 1)
@@ -398,21 +399,21 @@ def neg_r2_testemunha_mexida(n, th):
 
 def main():
     rng = np.random.default_rng(SEMENTE)
-    L = [f"Certificado estrutural do padrao 1 (amostragem classica) | semente {SEMENTE} | {date.today()}",
-         "circuitos conferidos em 14/11 contra Ballinas 2022 Fig. 2, Ballinas 2024 Fig. 4 e texto, EAQGA v1 Alg. 1, Gamberi v1 Alg. 3, Saini Figs. 3 e 5; conferencia: TV(amostrador, statevector) com angulos sorteados", ""]
+    L = [f"Structural certificate of Pattern 2 (product state) (classical sampling) | seed {SEMENTE} | {date.today()}",
+         "circuits checked on 14 Nov against Ballinas 2022 Fig. 2, Ballinas 2024 Fig. 4 and text, EAQGA v1 Alg. 1, Gamberi v1 Alg. 3, Saini Figs. 3 and 5; cross-check: TV(sampler, statevector) with randomly drawn angles", ""]
     casos = [("Ballinas 2022 (Fig. 2)", ballinas, True),
-             ("Ballinas 2024 (Fig. 4, sem X)", lambda n, th: ballinas2024(n, th, "figura"), True),
-             ("Ballinas 2024 (texto: X na ancila)", lambda n, th: ballinas2024(n, th, "texto_x"), True),
-             ("Ballinas 2024 (texto: ancila controla)", lambda n, th: ballinas2024(n, th, "texto_controle"), True),
-             ("EAQGA, estrela (texto)", lambda n, th: eaqga_estrela(n, th, rng), True),
-             ("EAQGA, cadeia (pseudocodigo)", lambda n, th: eaqga_cadeia(n, th, rng), True),
+             ("Ballinas 2024 (Fig. 4, no X)", lambda n, th: ballinas2024(n, th, "figura"), True),
+             ("Ballinas 2024 (text: X on the ancilla)", lambda n, th: ballinas2024(n, th, "texto_x"), True),
+             ("Ballinas 2024 (text: ancilla controls)", lambda n, th: ballinas2024(n, th, "texto_controle"), True),
+             ("EAQGA, star (text)", lambda n, th: eaqga_estrela(n, th, rng), True),
+             ("EAQGA, chain (pseudocode)", lambda n, th: eaqga_cadeia(n, th, rng), True),
              ("Gamberi 2026 (Algorithm 3)", gamberi, True),
              ("Saini 2025 (Fig. 3)", saini, True),
-             ("controle: R2 com alvo em superposicao", neg_r2_alvo_girado, False),
-             ("controle: R2 com testemunha mexida", neg_r2_testemunha_mexida, False),
-             ("controle: H-CNOT-H", neg_interferencia, False),
-             ("controle: camada QAOA", neg_qaoa, False),
-             ("controle: Bell no prefixo", neg_prefixo, False)]
+             ("control: R2 with target in superposition", neg_r2_alvo_girado, False),
+             ("control: R2 with disturbed witness", neg_r2_testemunha_mexida, False),
+             ("control: H-CNOT-H", neg_interferencia, False),
+             ("control: QAOA layer", neg_qaoa, False),
+             ("control: Bell state in the prefix", neg_prefixo, False)]
     tudo = True
     for nome, f, esperado in casos:
         tvs, vered = [], set()
@@ -428,22 +429,22 @@ def main():
         oks = {v[0] for v in vered}
         certo = oks == {esperado}
         tudo &= certo and (not tvs or max(tvs) < 1e-12)
-        L.append(f"{nome}: classifica como amostragem classica = {sorted(oks)} (esperado {esperado}) | "
-                 + (f"TV max {max(tvs):.1e} em {len(tvs)} circuitos" if tvs else "sem amostrador")
-                 + f" | {'OK' if certo else 'FALHA'}")
+        L.append(f"{nome}: classified as classical sampling = {sorted(oks)} (expected {esperado}) | "
+                 + (f"TV max {max(tvs):.1e} over {len(tvs)} circuits" if tvs else "no sampler")
+                 + f" | {'OK' if certo else 'FAIL'}")
         L.append("   " + "; ".join(sorted({v[1] for v in vered}))[:300])
-    # escala: EAQGA com 100 qubits (o caso que os autores dizem intratavel de simular)
+    # scale: EAQGA with 100 qubits (the case the authors say is intractable to simulate)
     t0 = time.time()
     qc = eaqga_estrela(100, rng.uniform(0, 2 * np.pi, 100), rng)
     ok, det, _ = classifica(qc)
     L.append("")
-    L.append(f"EAQGA com 100 qubits: amostragem classica = {ok} ({det}) | {time.time() - t0:.2f}s")
-    qc = ballinas(16, rng.uniform(0, 2 * np.pi, 16))  # prefixo exato: suporte 2^17 apos a camada de H
+    L.append(f"EAQGA with 100 qubits: classical sampling = {ok} ({det}) | {time.time() - t0:.2f}s")
+    qc = ballinas(16, rng.uniform(0, 2 * np.pi, 16))  # exact prefix: support 2^17 after the H layer
     t0 = time.time()
     ok, det, _ = classifica(qc)
-    L.append(f"Ballinas com 16 qubits de dados: amostragem classica = {ok} ({det}) | {time.time() - t0:.2f}s")
+    L.append(f"Ballinas with 16 data qubits: classical sampling = {ok} ({det}) | {time.time() - t0:.2f}s")
     tudo &= ok
-    L.append(f"\ntodos conforme o esperado: {tudo}")
+    L.append(f"\nall as expected: {tudo}")
     print("\n".join(L))
     (RAIZ / "resultados" / "qga" / f"certifica_padrao1-{date.today()}.txt").write_text("\n".join(L) + "\n")
     return 0

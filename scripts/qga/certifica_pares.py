@@ -1,20 +1,20 @@
-"""Certificacao exata da reducao do emaranhamento entre individuos (13/11/2026).
+"""Exact certification of the reduction of entanglement between individuals (13 Nov 2026).
 
-Afirmacao (souza_v1.py): se dois individuos A e B comecam num estado emaranhado |Phi> e cada um
-evolui pelo proprio circuito (U_A x U_B), a distribuicao medida em A e a de U_A rho_A0 U_A^dagger,
-com rho_A0 = Tr_B |Phi><Phi|, e nao depende de U_B. Entao o individuo emaranhado equivale a um
-individuo com estado inicial classico aleatorio.
+Claim (souza_v1.py): if two individuals A and B start in an entangled state |Phi> and each one
+evolves under its own circuit (U_A x U_B), the measured distribution of A is that of
+U_A rho_A0 U_A^dagger, with rho_A0 = Tr_B |Phi><Phi|, and does not depend on U_B. So the entangled
+individual is equivalent to an individual with a random classical initial state.
 
-Teste, no motor exato esparso em Z[zeta_16], com individuos de um registro (m = 1, n = 8; o par
-tem 16 qubits, como no artigo para funcoes de uma variavel), circuitos de G_qu sorteados e
-mutados pelos operadores da v1:
-  "max" : |Phi> = H^8 em A, CX(A_j -> B_j); previsao: marginal de A exatamente uniforme;
-  "bell": |Phi> = (|b_A b_B> + |~b_A ~b_B>)/sqrt(2); previsao: marginal de A exatamente igual a
-          (P_{U_A |b_A>} + P_{U_A |~b_A>})/2, calculada em duas execucoes separadas de 8 qubits.
-Igualdade decidida no anel (numerador em Z[zeta], expoente k), sem ponto flutuante.
+Test, in the exact sparse engine over Z[zeta_16], with one-register individuals (m = 1, n = 8;
+the pair has 16 qubits, as in the article for one-variable functions), G_qu circuits drawn at
+random and mutated by the v1 operators:
+  "max" : |Phi> = H^8 on A, CX(A_j -> B_j); prediction: marginal of A exactly uniform;
+  "bell": |Phi> = (|b_A b_B> + |~b_A ~b_B>)/sqrt(2); prediction: marginal of A exactly equal to
+          (P_{U_A |b_A>} + P_{U_A |~b_A>})/2, computed in two separate 8-qubit runs.
+Equality decided in the ring (numerator in Z[zeta], exponent k), without floating point.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_pares.py
-Saida: resultados/qga/certifica_pares-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/certifica_pares.py
+Output: resultados/qga/certifica_pares-<date>.txt
 """
 from __future__ import annotations
 
@@ -65,7 +65,7 @@ def roda(n, portas):
 
 
 def iguais(n1, k1, n2, k2):
-    """n1/2^k1 == n2/2^k2 no anel."""
+    """n1/2^k1 == n2/2^k2 in the ring."""
     return tuple(a * 2 ** k2 for a in n1) == tuple(b * 2 ** k1 for b in n2)
 
 
@@ -74,7 +74,7 @@ def caso(args):
     rng = np.random.default_rng(semente)
     A = S.muta(rng, S.individuo(rng, S.G_QU, nq=NB), S.G_QU)
     B = S.muta(rng, S.individuo(rng, S.G_QU, nq=NB), S.G_QU)
-    # os individuos de um registro precisam de mutacao com nq=8: as camadas ja sao de 8 qubits
+    # one-register individuals need mutation with nq=8: the layers already have 8 qubits
     if modo == "max":
         prep = [("h", q) for q in range(NB)] + [("mcx", [q], q + NB) for q in range(NB)]
         par = prep + portas_ind(A, 0, False) + portas_ind(B, NB, False)
@@ -100,11 +100,11 @@ def caso(args):
     ok = True
     zero = (0,) * 8
     for y in set(marg) | set(g1) | set(g2):
-        # previsao (n1/2^k1 + n2/2^k2)/2 = (n1 2^k2 + n2 2^k1) / 2^(k1+k2+1)
+        # prediction (n1/2^k1 + n2/2^k2)/2 = (n1 2^k2 + n2 2^k1) / 2^(k1+k2+1)
         n1, n2 = g1.get(y, zero), g2.get(y, zero)
         prev = tuple(a * 2 ** m2.k + b * 2 ** m1.k for a, b in zip(n1, n2))
         ok &= iguais(marg.get(y, zero), m.k, prev, m1.k + m2.k + 1)
-    # controle: a previsao ingenua (A sozinho, sem emaranhamento) deveria falhar em geral
+    # control: the naive prediction (A alone, without entanglement) should fail in general
     difere = not all(iguais(marg.get(y, zero), m.k, g1.get(y, zero), m1.k) for y in set(marg) | set(g1))
     return modo, ok, m.k, m.max_suporte, difere
 
@@ -113,13 +113,13 @@ def main():
     tarefas = [(modo, SEMENTE + 1000 * i + j) for j, modo in enumerate(("max", "bell")) for i in range(CASOS)]
     with Pool(16) as pool:
         res = pool.map(caso, tarefas, chunksize=1)
-    linhas = [f"Reducao do emaranhamento entre individuos, conferida no anel | semente {SEMENTE} | {date.today()}",
-              f"individuos de 1 registro (n={NB}), par de {2 * NB} qubits, G_qu com operadores da v1, {CASOS} pares por modo"]
+    linhas = [f"Reduction of entanglement between individuals, checked in the ring | seed {SEMENTE} | {date.today()}",
+              f"1-register individuals (n={NB}), pair of {2 * NB} qubits, G_qu with v1 operators, {CASOS} pairs per mode"]
     for modo in ("max", "bell"):
         rs = [r for r in res if r[0] == modo]
-        linhas.append(f"{modo}: marginal de A == previsao exata em {sum(r[1] for r in rs)}/{len(rs)} | "
-                      f"k max {max(r[2] for r in rs)} | suporte max {max(r[3] for r in rs)} | "
-                      f"controle (previsao sem emaranhamento falha) em {sum(r[4] for r in rs)}/{len(rs)}")
+        linhas.append(f"{modo}: marginal of A == exact prediction in {sum(r[1] for r in rs)}/{len(rs)} | "
+                      f"max k {max(r[2] for r in rs)} | max support {max(r[3] for r in rs)} | "
+                      f"control (prediction without entanglement fails) in {sum(r[4] for r in rs)}/{len(rs)}")
     print("\n".join(linhas))
     (RAIZ / "resultados" / "qga" / f"certifica_pares-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0 if all(r[1] for r in res) else 1

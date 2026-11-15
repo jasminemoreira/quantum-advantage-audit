@@ -1,42 +1,42 @@
-"""Reimplementacao de Souza, Dardenne e Portugal (arXiv 2511.05254 v1) com os operadores do texto
-atual (13/11/2026). Substitui os operadores de vies_centro.py, que seguiam o metodo marcado como
-"OLD METHOD" (comentado) no fonte TeX.
+"""Reimplementation of Souza, Dardenne and Portugal (arXiv 2511.05254 v1) with the operators of the
+current text (13 Nov 2026). Replaces the operators of vies_centro.py, which followed the method
+marked "OLD METHOD" (commented out) in the TeX source.
 
-Fixado pelo texto (Gate-Based-QGA.tex, secoes 3.1 a 3.8 e 4):
-  - m registros de n = 8 qubits; decodificacao x = a + z/(2^n - 1)(b - a), b_1 mais significativo;
-  - estado inicial de base aleatorio; G_cl = {I, X, CNOT, SWAP, Toffoli, Fredkin},
-    G_qu = G_cl + {H, T, T+, S, S+, Y, Z}; no maximo uma porta por qubit por camada;
-  - G_qu: primeira camada com H em k qubits (k uniforme em 1..mn), demais camadas sorteadas;
-  - aptidao f(x*), x* = media amostral dos valores decodificados em 1024 shots;
-  - elitismo 20% (copiados sem mutacao); o restante por cruzamento; a populacao inteira, elites
-    inclusive, e reavaliada a cada geracao;
-  - cruzamento com probabilidade 0,7 (senao os dois pais passam inalterados): uma camada delta
-    sorteada na segunda metade do circuito; k uniforme em 1..n; trocam-se as portas que agem
-    nos k qubits menos significativos, junto com as portas multiqubit inteiramente contidas
-    nessa regiao; dois filhos;
-  - mutacao por gene (porta numa posicao), probabilidade 0,3 cada, com os sete casos de troca
-    de aridade do texto.
+Fixed by the text (Gate-Based-QGA.tex, sections 3.1 to 3.8 and 4):
+  - m registers of n = 8 qubits; decoding x = a + z/(2^n - 1)(b - a), b_1 most significant;
+  - random basis initial state; G_cl = {I, X, CNOT, SWAP, Toffoli, Fredkin},
+    G_qu = G_cl + {H, T, T+, S, S+, Y, Z}; at most one gate per qubit per layer;
+  - G_qu: first layer with H on k qubits (k uniform in 1..mn), remaining layers drawn at random;
+  - fitness f(x*), x* = sample mean of the decoded values over 1024 shots;
+  - 20% elitism (copied without mutation); the rest by crossover; the whole population, elites
+    included, is re-evaluated every generation;
+  - crossover with probability 0.7 (otherwise both parents pass unchanged): one layer delta
+    drawn in the second half of the circuit; k uniform in 1..n; the gates acting on the k least
+    significant qubits are swapped, together with the multiqubit gates entirely contained in
+    that region; two children;
+  - per-gene mutation (gate at one position), probability 0.3 each, with the seven
+    arity-change cases of the text.
 
-NAO fixado pelo texto (escolhas declaradas):
-  - profundidade fixa d = 5; selecao dos pais por torneio binario;
-  - "k qubits menos significativos": os k menos significativos de CADA registro;
-  - no cruzamento, uma porta do outro pai que colida com uma porta que ficou (parcialmente na
-    regiao) e descartada, e os qubits sem porta recebem I;
-  - mutacao: a porta nova e sorteada uniformemente em G; a aridade dela define o caso; no caso
-    2 -> 3 a ordem e (qubit mantido, os outros dois em ordem aleatoria); no caso 3 -> 2 o qubit
-    que sobra recebe I; os genes da camada de H tambem podem mutar;
-  - cada filho herda o estado inicial de base do pai de onde vem.
+NOT fixed by the text (declared choices):
+  - fixed depth d = 5; parent selection by binary tournament;
+  - "k least significant qubits": the k least significant of EACH register;
+  - in crossover, a gate from the other parent that collides with a gate that stayed (partly in
+    the region) is discarded, and qubits without a gate receive I;
+  - mutation: the new gate is drawn uniformly from G; its arity defines the case; in case
+    2 -> 3 the order is (kept qubit, the other two in random order); in case 3 -> 2 the
+    leftover qubit receives I; the genes of the H layer can also mutate;
+  - each child inherits the basis initial state of the parent it comes from.
 
-Emaranhamento entre individuos (secao 4.3): o texto diz que pares sorteados "compartilham estados
-maximamente emaranhados" no inicio, sem dizer quais. Por nao sinalizacao, a distribuicao medida
-num individuo A so depende do estado reduzido dele: rho_A = U_A rho_A0 U_A^dagger, com
-rho_A0 = Tr_B |Phi><Phi|, qualquer que seja o circuito de B e o pareamento. Duas leituras:
-  - "max": |Phi> = soma_z |z>_A |z>_B / 2^(mn/2) (emaranhamento maximo entre os dois sistemas);
-    rho_A0 = I / 2^(mn), entao a saida de A e uniforme para QUALQUER circuito;
-  - "bell": |Phi> = (|b_A b_B> + |~b_A ~b_B>)/sqrt(2) (um ebit, com ~ o complemento bit a bit);
+Entanglement between individuals (section 4.3): the text says that randomly drawn pairs "share
+maximally entangled states" at the start, without saying which. By no-signaling, the measured
+distribution of an individual A depends only on its reduced state: rho_A = U_A rho_A0 U_A^dagger,
+with rho_A0 = Tr_B |Phi><Phi|, whatever the circuit of B and the pairing. Two readings:
+  - "max": |Phi> = sum_z |z>_A |z>_B / 2^(mn/2) (maximal entanglement between the two systems);
+    rho_A0 = I / 2^(mn), so the output of A is uniform for ANY circuit;
+  - "bell": |Phi> = (|b_A b_B> + |~b_A ~b_B>)/sqrt(2) (one ebit, with ~ the bitwise complement);
     rho_A0 = (|b><b| + |~b><~b|)/2.
-Nas duas, o individuo emaranhado equivale exatamente a um individuo com estado inicial classico
-aleatorio. A reducao e conferida de forma exata em certifica_pares.py.
+In both, the entangled individual is exactly equivalent to an individual with a random classical
+initial state. The reduction is checked exactly in certifica_pares.py.
 """
 from __future__ import annotations
 
@@ -48,24 +48,24 @@ M, NB, NQ, DIM = VC.M, VC.NB, VC.NQ, VC.DIM
 SHOTS, PROF = VC.SHOTS, VC.PROF
 P_ELITE, P_CROSS, P_MUT = VC.P_ELITE, VC.P_CROSS, VC.P_MUT
 G_CL, G_QU = VC.G_CL, VC.G_QU
-UM = 1  # aridades
+UM = 1  # arities
 TODOS = (1 << NQ) - 1
 
-# Escolhas nao fixadas pelo texto, como opcoes (padrao = as escolhas declaradas acima); usadas na
-# analise de sensibilidade (sensibilidade_souza.py). Alternativas:
-#   prof: inteiro; selecao: "torneio" | "roleta" (prob. proporcional a 1/(1+f));
-#   regiao: "por_registro" | "global" (os k qubits menos significativos da cadeia inteira, que
-#     ficam todos no ultimo registro); colisao: "descarta_vem" | "descarta_fica" (a porta que vem
-#     do outro pai prevalece, a que ficou sai e os qubits dela recebem I);
-#   sorteio: "uniforme" (porta uniforme em G) | "por_aridade" (aridade uniforme, depois porta);
-#   h_muta: True | False (camada de H congelada); base: "herda" | "cruza" (no cruzamento os bits
-#     do estado inicial na regiao trocada tambem sao trocados).
+# Choices not fixed by the text, as options (default = the declared choices above); used in the
+# sensitivity analysis (sensibilidade_souza.py). Alternatives:
+#   prof: integer; selecao: "torneio" (tournament) | "roleta" (roulette, prob. proportional to 1/(1+f));
+#   regiao: "por_registro" (per register) | "global" (the k least significant qubits of the whole
+#     string, which all lie in the last register); colisao: "descarta_vem" | "descarta_fica" (the
+#     gate coming from the other parent prevails, the one that stayed leaves and its qubits receive I);
+#   sorteio: "uniforme" (gate uniform in G) | "por_aridade" (uniform arity, then gate);
+#   h_muta: True | False (H layer frozen); base: "herda" (inherit) | "cruza" (in crossover the
+#     initial-state bits in the swapped region are also swapped).
 PADRAO = dict(prof=PROF, selecao="torneio", regiao="por_registro", colisao="descarta_vem",
               sorteio="uniforme", h_muta=True, base="herda", funcao="rastrigin")
 OPC = dict(PADRAO)
 
 
-# funcoes de teste (minimo global f = 0), formulas usuais (Jamil e Yang 2013)
+# test functions (global minimum f = 0), usual formulas (Jamil and Yang 2013)
 def esfera(x):
     x = np.asarray(x)
     return float(np.sum(x ** 2))
@@ -89,14 +89,14 @@ def rosenbrock(x):
 
 
 FUNCOES = dict(rastrigin=VC.rastrigin, esfera=esfera, ackley=ackley, griewank=griewank, rosenbrock=rosenbrock)
-OTIMOS = dict(rastrigin=0.0, esfera=0.0, ackley=0.0, griewank=0.0, rosenbrock=1.0)  # coordenada do minimo
+OTIMOS = dict(rastrigin=0.0, esfera=0.0, ackley=0.0, griewank=0.0, rosenbrock=1.0)  # coordinate of the minimum
 
 
 def por_aridade(conjunto, a):
     return [g for g in conjunto if g[1] == a]
 
 
-# ---------------- circuitos (camadas cheias: todo qubit tem uma porta, I inclusive) ----------------
+# ---------------- circuits (full layers: every qubit has a gate, I included) ----------------
 def camada_cheia(rng, conjunto, nq=NQ):
     livres = list(rng.permutation(nq))
     gates = []
@@ -120,7 +120,7 @@ def individuo(rng, conjunto, nq=NQ, prof=PROF):
 
 
 def sem_i(ind):
-    """Formato de vies_centro (sem portas I), usado pelos simuladores."""
+    """vies_centro format (no I gates), used by the simulators."""
     return {"base": ind["base"], "cams": [[g for g in cam if g[0] != "i"] for cam in ind["cams"]]}
 
 
@@ -129,14 +129,14 @@ def confere_camada(cam, nq=NQ):
     return sorted(qs) == list(range(nq))
 
 
-# ---------------- cruzamento ----------------
+# ---------------- crossover ----------------
 def regiao_baixa(k, m=M, nb=NB):
-    """k qubits menos significativos de cada registro (qubit r*nb + 0 e o mais significativo)."""
+    """k least significant qubits of each register (qubit r*nb + 0 is the most significant)."""
     return {r * nb + nb - 1 - j for r in range(m) for j in range(k)}
 
 
 def regiao_global(k, m=M, nb=NB):
-    """k qubits menos significativos da cadeia inteira (registro m-1 e o ultimo)."""
+    """k least significant qubits of the whole string (register m-1 is the last one)."""
     return {m * nb - 1 - j for j in range(k)}
 
 
@@ -172,7 +172,7 @@ def cruza(rng, p1, p2, m=M, nb=NB):
         return ({"base": p1["base"], "cams": list(p1["cams"])},
                 {"base": p2["base"], "cams": list(p2["cams"])})
     d = len(p1["cams"])
-    delta = int(rng.integers(d // 2, d))  # segunda metade: d=5 -> camadas 2, 3, 4 (base 0)
+    delta = int(rng.integers(d // 2, d))  # second half: d=5 -> layers 2, 3, 4 (0-based)
     k = int(rng.integers(1, nb + 1))
     R = regiao_baixa(k, m, nb) if OPC["regiao"] == "por_registro" else regiao_global(k, m, nb)
     a, b = troca_camada(p1["cams"][delta], p2["cams"][delta], R, m * nb)
@@ -185,7 +185,7 @@ def cruza(rng, p1, p2, m=M, nb=NB):
     return {"base": b1, "cams": c1}, {"base": b2, "cams": c2}
 
 
-# ---------------- mutacao (sete casos) ----------------
+# ---------------- mutation (seven cases) ----------------
 def muta_camada(rng, cam, conjunto):
     cam = list(cam)
     um = por_aridade(conjunto, 1)
@@ -202,21 +202,21 @@ def muta_camada(rng, cam, conjunto):
         a = len(qs)
         livres1 = [h for h in cam if len(h[1]) == 1 and h is not g and h != g]
         i = cam.index(g)
-        if a_novo == a:  # caso 1
+        if a_novo == a:  # case 1
             cam[i] = (nome_novo, qs)
-        elif a == 1 and a_novo in (2, 3):  # casos 2 e 3
+        elif a == 1 and a_novo in (2, 3):  # cases 2 and 3
             precisa = a_novo - 1
             if len(livres1) < precisa:
-                cam[i] = (sorteia(um)[0], qs)  # volta ao caso 1
+                cam[i] = (sorteia(um)[0], qs)  # falls back to case 1
                 continue
             alvos = [livres1[j] for j in rng.choice(len(livres1), size=precisa, replace=False)]
             for h in alvos:
                 cam.remove(h)
             cam[cam.index(g)] = (nome_novo, qs + tuple(h[1][0] for h in alvos))
-        elif a_novo == 1:  # casos 4 e 5
+        elif a_novo == 1:  # cases 4 and 5
             cam.pop(i)
             cam += [(sorteia(um)[0], (q,)) for q in qs]
-        elif a == 2 and a_novo == 3:  # caso 6
+        elif a == 2 and a_novo == 3:  # case 6
             if not livres1:
                 cam[i] = (sorteia(por_aridade(conjunto, 2))[0], qs)
                 continue
@@ -226,7 +226,7 @@ def muta_camada(rng, cam, conjunto):
             resto = [qs[1 - j], h[1][0]]
             resto = [resto[t] for t in rng.permutation(2)]
             cam[cam.index(g)] = (nome_novo, (qs[j],) + tuple(resto))
-        elif a == 3 and a_novo == 2:  # caso 7
+        elif a == 3 and a_novo == 2:  # case 7
             ordem = rng.permutation(3)
             cam[i] = (nome_novo, (qs[ordem[0]], qs[ordem[1]]))
             cam.append(("i", (qs[ordem[2]],)))
@@ -241,9 +241,9 @@ def muta(rng, ind, conjunto):
                                           for j, c in enumerate(ind["cams"])]}
 
 
-# ---------------- avaliacao ----------------
+# ---------------- evaluation ----------------
 def p_quantico(ind, emar=None):
-    """Distribuicao exata (ponto flutuante) da saida medida de um individuo."""
+    """Exact distribution (floating point) of the measured output of an individual."""
     if emar == "max":
         return np.full(DIM, 1.0 / DIM)
     s = sem_i(ind)
@@ -255,8 +255,8 @@ def p_quantico(ind, emar=None):
 
 
 def amostra_bits(ind, rng, gemeo, emar=None):
-    """Classico (G_cl) ou gemeo classico de G_qu, shot a shot, com estado inicial classico
-    aleatorio quando emar != None (a equivalencia classica do individuo emaranhado)."""
+    """Classical (G_cl) or the stochastic analog of G_qu, shot by shot, with a random classical
+    initial state when emar != None (the classical equivalent of the entangled individual)."""
     if emar == "max":
         ini = rng.integers(DIM, size=SHOTS)
     elif emar == "bell":
@@ -270,7 +270,7 @@ def amostra_bits(ind, rng, gemeo, emar=None):
                 bits[:, q[0]] ^= True
             elif nome == "h":
                 if not gemeo:
-                    raise ValueError("H no avaliador classico")
+                    raise ValueError("H in the classical evaluator")
                 bits[:, q[0]] ^= rng.random(SHOTS) < 0.5
             elif nome == "cx":
                 bits[:, q[1]] ^= bits[:, q[0]]
@@ -295,14 +295,14 @@ def aptidao(ind, modo, dominio, rng, emar=None):
 
 
 def aptidao_exata(ind, dominio, emar=None):
-    """f(E[x]) sem ruido de shots (so para o modo quantico)."""
+    """f(E[x]) without shot noise (quantum mode only)."""
     p = p_quantico(ind, emar)
     return FUNCOES[OPC["funcao"]]((VC.decodifica(np.arange(DIM), dominio) * p[:, None]).sum(axis=0))
 
 
-# ---------------- algoritmo genetico ----------------
+# ---------------- genetic algorithm ----------------
 def ga(modo, dominio, semente, pop_n=50, ger=30, emar=None):
-    """Devolve (curva do melhor f avaliado por geracao, melhor individuo final, f dele)."""
+    """Returns (curve of the best evaluated f per generation, best final individual, its f)."""
     rng = np.random.default_rng(semente)
     conjunto = G_CL if modo == "classico" else G_QU
     pop = [individuo(rng, conjunto, prof=OPC["prof"]) for _ in range(pop_n)]
@@ -328,7 +328,7 @@ def ga(modo, dominio, semente, pop_n=50, ger=30, emar=None):
             if len(nova) < pop_n:
                 nova.append(muta(rng, f2, conjunto))
         pop = nova
-        fit = [aptidao(i, modo, dominio, rng, emar) for i in pop]  # todos reavaliados
+        fit = [aptidao(i, modo, dominio, rng, emar) for i in pop]  # all re-evaluated
         curva.append(min(fit))
     i = int(np.argmin(fit))
     return curva, pop[i], fit[i]

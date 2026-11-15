@@ -1,20 +1,22 @@
-"""Experimentos com os operadores da v1 (souza_v1.py), 13/11/2026.
+"""Experiments with the v1 operators (souza_v1.py), 13 Nov 2026.
 
-Parte A (refaz vies_centro.py): |P| = 50, 30 geracoes, 100 repeticoes; avaliadores quantico,
-gemeo classico (H -> moeda, Y -> X, fases removidas) e classico (G_cl); dominios centrado
-[-5.12, 5.12] (otimo no centro) e deslocado [-2.12, 8.12] (centro em x = 3, otimo em x = 0).
+Part A (redoes vies_centro.py): |P| = 50, 30 generations, 100 repetitions; quantum evaluator,
+classical stochastic analog without interference (H -> coin, Y -> X, phases removed) and classical
+evaluator (G_cl); centered domain [-5.12, 5.12] (optimum at the center) and shifted domain
+[-2.12, 8.12] (center at x = 3, optimum at x = 0).
 
-Parte B (emaranhamento entre individuos, secao 4.3 do artigo): |P| = 10 como na figura deles,
-30 geracoes, 200 repeticoes; quantico sem emaranhamento, com "max" e com "bell" (ver souza_v1.py),
-e o equivalente classico do "bell" (gemeo com estado inicial sorteado entre b e ~b a cada shot).
-Previsao: "max" deixa a saida de todo individuo uniforme, entao x* cai no centro do dominio
-para qualquer circuito; no centrado isso e otimo, no deslocado e f(3, 3) = 18.
+Part B (entanglement between individuals, section 4.3 of their article): |P| = 10 as in their figure,
+30 generations, 200 repetitions; quantum without entanglement, with "max" and with "bell" (see
+souza_v1.py), and the classical equivalent of "bell" (analog with the initial state drawn between
+b and ~b at each shot).
+Prediction: "max" makes the output of every individual uniform, so x* falls at the center of the
+domain for any circuit; on the centered domain this is the optimum, on the shifted one it is f(3, 3) = 18.
 
-Relata o melhor f avaliado por geracao (com ruido de shots, como o artigo) e, para o quantico,
-f(E[x]) exato do melhor individuo final.
+Reports the best evaluated f per generation (with shot noise, as in the article) and, for the
+quantum evaluator, the exact f(E[x]) of the best final individual.
 
-Uso (WSL): externos/QFIE/.venv/bin/python scripts/qga/exp_souza_v1.py
-Saida: resultados/qga/exp_souza_v1-<data>.txt
+Usage (WSL): externos/QFIE/.venv/bin/python scripts/qga/exp_souza_v1.py
+Output: resultados/qga/exp_souza_v1-<date>.txt
 """
 from __future__ import annotations
 
@@ -45,7 +47,7 @@ def tarefa(args):
 
 
 def tabela(res, chaves, rotulo):
-    linhas = [rotulo, "dominio | avaliador | " + " | ".join(f"g{g}" for g in GENS) + " | f(E[x]) do melhor final (mediana)"]
+    linhas = [rotulo, "domain | evaluator | " + " | ".join(f"g{g}" for g in GENS) + " | f(E[x]) of the best final (median)"]
     for dom in DOMINIOS:
         for modo, emar in chaves:
             rs = [r for r in res if r[1] == modo and r[2] == emar and r[3] == dom]
@@ -67,15 +69,15 @@ def main():
          for k, dom in enumerate(DOMINIOS) for j, (modo, emar) in enumerate(chB) for r in range(200)]
     with Pool(16) as pool:
         res = pool.map(tarefa, A + B, chunksize=2)
-    linhas = [f"Souza/Dardenne/Portugal, operadores da v1 (souza_v1.py) | semente {SEMENTE} | {date.today()}",
-              f"m=2 n=8 shots=1024 d=5 G={GER}; melhor f avaliado por geracao, media (erro-padrao)", ""]
+    linhas = [f"Souza/Dardenne/Portugal, v1 operators (souza_v1.py) | seed {SEMENTE} | {date.today()}",
+              f"m=2 n=8 shots=1024 d=5 G={GER}; best evaluated f per generation, mean (standard error)", ""]
     linhas += tabela([r for r in res if r[0] == "A"], [("quantico", None), ("gemeo", None), ("classico", None)],
-                     "Parte A: |P|=50, 100 repeticoes")
+                     "Part A: |P|=50, 100 repetitions")
     linhas.append("")
-    linhas += tabela([r for r in res if r[0] == "B"], chB, "Parte B: emaranhamento entre individuos, |P|=10, 200 repeticoes")
-    # diferencas da parte B na geracao 5 e 30 (com - sem), com erro-padrao
+    linhas += tabela([r for r in res if r[0] == "B"], chB, "Part B: entanglement between individuals, |P|=10, 200 repetitions")
+    # part B differences at generations 5 and 30 (with - without), with standard error
     linhas.append("")
-    linhas.append("Parte B, diferenca (com emaranhamento - sem), media (EP), nas geracoes 5 e 30")
+    linhas.append("Part B, difference (with entanglement - without), mean (SE), at generations 5 and 30")
     for dom in DOMINIOS:
         base = np.array([r[4] for r in res if r[0] == "B" and r[1] == "quantico" and r[2] is None and r[3] == dom])
         for modo, emar in chB[1:]:
@@ -86,7 +88,7 @@ def main():
                 ep = np.sqrt(c[:, g].var(ddof=1) / len(c) + base[:, g].var(ddof=1) / len(base))
                 partes.append(f"g{g}: {d:+.3f} ({ep:.3f})")
             linhas.append(f"{dom} {modo}+{emar} | " + " | ".join(partes))
-    linhas.append(f"\ntempo {time.time() - t0:.0f}s")
+    linhas.append(f"\ntime {time.time() - t0:.0f}s")
     print("\n".join(linhas))
     (RAIZ / "resultados" / "qga" / f"exp_souza_v1-{date.today()}.txt").write_text("\n".join(linhas) + "\n")
     return 0
