@@ -1,7 +1,7 @@
 {
-  "title": "Where does the quantum advantage go? Reproduction package",
+  "title": "Classical sampling and Grover without coherence: reproduction package",
   "upload_type": "software",
-  "description": "Code and result files for the article <i>Where does the quantum advantage go? An audit of evolutionary algorithms executed on quantum circuits</i> (manuscript in preparation for Quantum Machine Intelligence). Includes an exact sparse simulator over Z[&zeta;<sub>16</sub>], the exact certificates for the reduced quantum genetic algorithm and the structural verifier for product-state circuits. Code under the MIT License; result files under CC BY 4.0.",
+  "description": "Code and result files for the article <i>Classical sampling and Grover without coherence: a structural audit of evolutionary algorithms run on quantum circuits</i> (manuscript in preparation for Quantum Machine Intelligence). Includes an exact sparse simulator over Z[&zeta;<sub>16</sub>], the exact certificates for the reduced quantum genetic algorithm and the structural verifier for product-state circuits. Code under the MIT License; result files under CC BY 4.0.",
   "creators": [
     {
       "name": "Moreira, Jasmine",

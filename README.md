@@ -1,7 +1,6 @@
-# Where does the quantum advantage go? — reproduction package
+# Classical sampling and Grover without coherence — reproduction package
 
-Code and result files for the article *Where does the quantum advantage go? An audit of evolutionary
-algorithms executed on quantum circuits* (manuscript in preparation for *Quantum Machine
+Code and result files for the article *Classical sampling and Grover without coherence: a structural audit of evolutionary algorithms run on quantum circuits* (manuscript in preparation for *Quantum Machine
 Intelligence*).
 
 Every number in the article comes from a dated text file in `results/qga/`, produced by one of the
